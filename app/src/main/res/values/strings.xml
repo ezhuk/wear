@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wear</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="hello_world">Test</string>
+    <string name="content_title">Title</string>
+    <string name="content_text">Example text.</string>
 </resources>
