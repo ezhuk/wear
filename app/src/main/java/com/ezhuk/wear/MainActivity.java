@@ -6,8 +6,6 @@ package com.ezhuk.wear;
 
 import android.app.Activity;
 import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preview.support.v4.app.NotificationManagerCompat;
 import android.preview.support.wearable.notifications.WearableNotifications;
@@ -25,6 +23,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         showTestNotification();
+        showTestNotificationWithPages();
     }
 
     @Override
@@ -40,5 +39,25 @@ public class MainActivity extends Activity {
 
         NotificationManagerCompat.from(this).notify(0,
                 new WearableNotifications.Builder(builder).build());
+    }
+
+    private void showTestNotificationWithPages() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(getString(R.string.page1_title))
+                .setContentText(getString(R.string.page1_text));
+
+        NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle();
+        style.setBigContentTitle(getString(R.string.page2_title))
+                .bigText(getString(R.string.page2_text));
+
+        Notification second = new NotificationCompat.Builder(this)
+                .setStyle(style)
+                .build();
+
+        NotificationManagerCompat.from(this).notify(1,
+                new WearableNotifications.Builder(builder)
+                        .addPage(second)
+                        .build());
     }
 }

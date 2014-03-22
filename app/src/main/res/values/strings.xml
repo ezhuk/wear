@@ -4,4 +4,8 @@
     <string name="hello_world">Test</string>
     <string name="content_title">Title</string>
     <string name="content_text">Example text.</string>
+    <string name="page1_title">Page 1</string>
+    <string name="page1_text">Sample text 1</string>
+    <string name="page2_title">Page 2</string>
+    <string name="page2_text">Sample text 2</string>
 </resources>
