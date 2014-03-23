@@ -3,9 +3,14 @@
     <string name="app_name">Wear</string>
     <string name="hello_world">Test</string>
     <string name="content_title">Title</string>
-    <string name="content_text">Example text.</string>
+    <string name="content_text">Sample text.</string>
     <string name="page1_title">Page 1</string>
-    <string name="page1_text">Sample text 1</string>
+    <string name="page1_text">Sample text 1.</string>
     <string name="page2_title">Page 2</string>
-    <string name="page2_text">Sample text 2</string>
+    <string name="page2_text">Sample text 2.</string>
+    <string name="action_title">Action Title</string>
+    <string name="action_text">Action Text.</string>
+    <string name="action_button">Action</string>
+    <string name="summary_title">Summary Title</string>
+    <string name="summary_text">Summary Text.</string>
 </resources>
