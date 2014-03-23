@@ -13,6 +13,8 @@ import android.support.v4.app.NotificationCompat;
 
 
 public class MainActivity extends Activity {
+    private final static String NOTIFICATION_GROUP = "notification_group";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +26,7 @@ public class MainActivity extends Activity {
         super.onResume();
         showTestNotification();
         showTestNotificationWithPages();
+        showGroupNotifications();
     }
 
     @Override
@@ -59,5 +62,36 @@ public class MainActivity extends Activity {
                 new WearableNotifications.Builder(builder)
                         .addPage(second)
                         .build());
+    }
+
+    private void showGroupNotifications() {
+        Notification first = new WearableNotifications.Builder(
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(getString(R.string.page1_title))
+                        .setContentText(getString(R.string.page1_text)))
+                .setGroup(NOTIFICATION_GROUP)
+                .build();
+
+        Notification second = new WearableNotifications.Builder(
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(getString(R.string.page2_title))
+                        .setContentText(getString(R.string.page2_text)))
+                .setGroup(NOTIFICATION_GROUP)
+                .build();
+
+        Notification summary = new WearableNotifications.Builder(
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("Summary Title")
+                        .setContentText("Summary Text"))
+                .setGroup(NOTIFICATION_GROUP,
+                        WearableNotifications.GROUP_ORDER_SUMMARY)
+                .build();
+
+        NotificationManagerCompat.from(this).notify(2, first);
+        NotificationManagerCompat.from(this).notify(3, second);
+        NotificationManagerCompat.from(this).notify(4, summary);
     }
 }
