@@ -11,12 +11,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preview.support.v4.app.NotificationManagerCompat;
+import android.preview.support.wearable.notifications.RemoteInput;
 import android.preview.support.wearable.notifications.WearableNotifications;
 import android.support.v4.app.NotificationCompat;
 
 
 public class MainActivity extends Activity {
-    private final static String NOTIFICATION_GROUP = "notification_group";
+    private static final String NOTIFICATION_GROUP = "notification_group";
+
+    private static final String ACTION_TEST = "com.ezhuk.wear.ACTION";
+    private static final String ACTION_EXTRA = "action";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,7 @@ public class MainActivity extends Activity {
         showTestNotification();
         showTestNotificationWithPages();
         showTestNotificationWithAction();
+        showTestNotificationWithInput();
         showGroupNotifications();
     }
 
@@ -90,6 +95,32 @@ public class MainActivity extends Activity {
                 new WearableNotifications.Builder(builder).build());
     }
 
+    private void showTestNotificationWithInput() {
+        Intent intent = new Intent(ACTION_TEST);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, 0);
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(getString(R.string.action_title))
+                        .setContentText(getString(R.string.action_text))
+                        .setContentIntent(pendingIntent);
+
+        String[] choices =
+                getResources().getStringArray(R.array.input_choices);
+
+        NotificationManagerCompat.from(this).notify(3,
+                new WearableNotifications.Builder(builder)
+                        .addRemoteInputForContentIntent(
+                                new RemoteInput.Builder(ACTION_EXTRA)
+                                        .setLabel(getString(R.string.action_label))
+                                        .setChoices(choices)
+                                        .build())
+                        .build()
+        );
+    }
+
     private void showGroupNotifications() {
         Notification first = new WearableNotifications.Builder(
                 new NotificationCompat.Builder(this)
@@ -116,8 +147,8 @@ public class MainActivity extends Activity {
                         WearableNotifications.GROUP_ORDER_SUMMARY)
                 .build();
 
-        NotificationManagerCompat.from(this).notify(3, first);
-        NotificationManagerCompat.from(this).notify(4, second);
-        NotificationManagerCompat.from(this).notify(5, summary);
+        NotificationManagerCompat.from(this).notify(4, first);
+        NotificationManagerCompat.from(this).notify(5, second);
+        NotificationManagerCompat.from(this).notify(6, summary);
     }
 }

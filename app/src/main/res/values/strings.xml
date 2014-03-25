@@ -11,6 +11,12 @@
     <string name="action_title">Action Title</string>
     <string name="action_text">Action Text.</string>
     <string name="action_button">Action</string>
+    <string name="action_label">Action</string>
     <string name="summary_title">Summary Title</string>
     <string name="summary_text">Summary Text.</string>
+    <string-array name="input_choices">
+        <item>First item</item>
+        <item>Second item</item>
+        <item>Third item</item>
+    </string-array>
 </resources>
