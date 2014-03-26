@@ -34,7 +34,8 @@ public class MainActivity extends Activity {
         showTestNotification();
         showTestNotificationWithPages();
         showTestNotificationWithAction();
-        showTestNotificationWithInput();
+        showTestNotificationWithInputForPrimaryAction();
+        showTestNotificationWithInputForSecondaryAction();
         showGroupNotifications();
     }
 
@@ -46,9 +47,9 @@ public class MainActivity extends Activity {
     private void showTestNotification() {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(getString(R.string.content_title))
-                .setContentText(getString(R.string.content_text));
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(getString(R.string.content_title))
+                        .setContentText(getString(R.string.content_text));
 
         NotificationManagerCompat.from(this).notify(0,
                 new WearableNotifications.Builder(builder).build());
@@ -57,9 +58,9 @@ public class MainActivity extends Activity {
     private void showTestNotificationWithPages() {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(getString(R.string.page1_title))
-                .setContentText(getString(R.string.page1_text));
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(getString(R.string.page1_title))
+                        .setContentText(getString(R.string.page1_text));
 
         NotificationCompat.BigTextStyle style =
                 new NotificationCompat.BigTextStyle();
@@ -85,17 +86,18 @@ public class MainActivity extends Activity {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(getString(R.string.action_title))
-                .setContentText(getString(R.string.action_text))
-                .addAction(R.drawable.ic_launcher,
-                        getString(R.string.action_button), pendingIntent);
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(getString(R.string.action_title))
+                        .setContentText(getString(R.string.action_text))
+                        .addAction(R.drawable.ic_launcher,
+                                getString(R.string.action_button),
+                                pendingIntent);
 
         NotificationManagerCompat.from(this).notify(2,
                 new WearableNotifications.Builder(builder).build());
     }
 
-    private void showTestNotificationWithInput() {
+    private void showTestNotificationWithInputForPrimaryAction() {
         Intent intent = new Intent(ACTION_TEST);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(this, 0, intent, 0);
@@ -110,13 +112,42 @@ public class MainActivity extends Activity {
         String[] choices =
                 getResources().getStringArray(R.array.input_choices);
 
+        RemoteInput remoteInput = new RemoteInput.Builder(ACTION_EXTRA)
+                .setLabel(getString(R.string.action_label))
+                .setChoices(choices)
+                .build();
+
         NotificationManagerCompat.from(this).notify(3,
                 new WearableNotifications.Builder(builder)
-                        .addRemoteInputForContentIntent(
-                                new RemoteInput.Builder(ACTION_EXTRA)
-                                        .setLabel(getString(R.string.action_label))
-                                        .setChoices(choices)
-                                        .build())
+                        .addRemoteInputForContentIntent(remoteInput)
+                        .build()
+        );
+    }
+
+    private void showTestNotificationWithInputForSecondaryAction() {
+        Intent intent = new Intent(ACTION_TEST);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, 0);
+
+        RemoteInput remoteInput = new RemoteInput.Builder(ACTION_EXTRA)
+                .setLabel(getString(R.string.action_label))
+                .build();
+
+        WearableNotifications.Action action =
+                new WearableNotifications.Action.Builder(
+                        R.drawable.ic_launcher,
+                        "Action",
+                        pendingIntent)
+                .addRemoteInput(remoteInput)
+                .build();
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this)
+                        .setContentTitle(getString(R.string.action_title));
+
+        NotificationManagerCompat.from(this).notify(4,
+                new WearableNotifications.Builder(builder)
+                        .addAction(action)
                         .build()
         );
     }
@@ -147,8 +178,8 @@ public class MainActivity extends Activity {
                         WearableNotifications.GROUP_ORDER_SUMMARY)
                 .build();
 
-        NotificationManagerCompat.from(this).notify(4, first);
-        NotificationManagerCompat.from(this).notify(5, second);
-        NotificationManagerCompat.from(this).notify(6, summary);
+        NotificationManagerCompat.from(this).notify(5, first);
+        NotificationManagerCompat.from(this).notify(6, second);
+        NotificationManagerCompat.from(this).notify(7, summary);
     }
 }
