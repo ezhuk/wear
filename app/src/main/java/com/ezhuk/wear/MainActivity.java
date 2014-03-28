@@ -22,6 +22,8 @@ public class MainActivity extends Activity {
         super.onResume();
 
         showTestNotification(this);
+        showTestNotificationBigTextStyle(this);
+        showTestNotificationInboxStyle(this);
         showTestNotificationWithPages(this);
         showTestNotificationWithAction(this);
         showTestNotificationWithInputForPrimaryAction(this);

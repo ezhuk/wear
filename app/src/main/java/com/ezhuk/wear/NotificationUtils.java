@@ -33,6 +33,35 @@ public class NotificationUtils {
                         .build());
     }
 
+    public static void showTestNotificationWithStyle(Context context,
+                                                     int id,
+                                                     NotificationCompat.Style style) {
+        Notification notification = new WearableNotifications.Builder(
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setStyle(style))
+                .build();
+
+        NotificationManagerCompat.from(context).notify(id, notification);
+    }
+
+    public static void showTestNotificationBigTextStyle(Context context) {
+        showTestNotificationWithStyle(context, 1,
+                new NotificationCompat.BigTextStyle()
+                        .setSummaryText(context.getString(R.string.summary_text))
+                        .setBigContentTitle("Big Text Style")
+                        .bigText("Sample big text."));
+    }
+
+    public static void showTestNotificationInboxStyle(Context context) {
+        showTestNotificationWithStyle(context, 2,
+                new NotificationCompat.InboxStyle()
+                        .setSummaryText(context.getString(R.string.summary_text))
+                        .setBigContentTitle("Inbox Style")
+                        .addLine("Line 1")
+                        .addLine("Line 2"));
+    }
+
     public static void showTestNotificationWithPages(Context context) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
@@ -40,16 +69,13 @@ public class NotificationUtils {
                         .setContentTitle(context.getString(R.string.page1_title))
                         .setContentText(context.getString(R.string.page1_text));
 
-        NotificationCompat.BigTextStyle style =
-                new NotificationCompat.BigTextStyle()
-                        .setBigContentTitle(context.getString(R.string.page2_title))
-                        .bigText(context.getString(R.string.page2_text));
-
         Notification second = new NotificationCompat.Builder(context)
-                .setStyle(style)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(context.getString(R.string.page2_title))
+                .setContentText(context.getString(R.string.page2_text))
                 .build();
 
-        NotificationManagerCompat.from(context).notify(1,
+        NotificationManagerCompat.from(context).notify(3,
                 new WearableNotifications.Builder(builder)
                         .addPage(second)
                         .build());
@@ -70,7 +96,7 @@ public class NotificationUtils {
                                 context.getString(R.string.action_button),
                                 pendingIntent);
 
-        NotificationManagerCompat.from(context).notify(2,
+        NotificationManagerCompat.from(context).notify(4,
                 new WearableNotifications.Builder(builder)
                         .build());
     }
@@ -95,7 +121,7 @@ public class NotificationUtils {
                 .setChoices(choices)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(3,
+        NotificationManagerCompat.from(context).notify(5,
                 new WearableNotifications.Builder(builder)
                         .addRemoteInputForContentIntent(remoteInput)
                         .build());
@@ -122,7 +148,7 @@ public class NotificationUtils {
                 new NotificationCompat.Builder(context)
                         .setContentTitle(context.getString(R.string.action_title));
 
-        NotificationManagerCompat.from(context).notify(4,
+        NotificationManagerCompat.from(context).notify(6,
                 new WearableNotifications.Builder(builder)
                         .addAction(action)
                         .build());
@@ -153,8 +179,8 @@ public class NotificationUtils {
                 .setGroup(NOTIFICATION_GROUP, WearableNotifications.GROUP_ORDER_SUMMARY)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(5, first);
-        NotificationManagerCompat.from(context).notify(6, second);
-        NotificationManagerCompat.from(context).notify(7, summary);
+        NotificationManagerCompat.from(context).notify(7, first);
+        NotificationManagerCompat.from(context).notify(8, second);
+        NotificationManagerCompat.from(context).notify(9, summary);
     }
 }
