@@ -8,6 +8,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.preview.support.v4.app.NotificationManagerCompat;
 import android.preview.support.wearable.notifications.RemoteInput;
@@ -53,8 +54,17 @@ public class NotificationUtils {
                         .bigText("Sample big text."));
     }
 
-    public static void showTestNotificationInboxStyle(Context context) {
+    public static void showTestNotificationBigPictureStyle(Context context) {
         showTestNotificationWithStyle(context, 2,
+                new NotificationCompat.BigPictureStyle()
+                        .setSummaryText(context.getString(R.string.summary_text))
+                        .setBigContentTitle("Big Picture Style")
+                        .bigPicture(BitmapFactory.decodeResource(
+                                context.getResources(), R.drawable.background)));
+    }
+
+    public static void showTestNotificationInboxStyle(Context context) {
+        showTestNotificationWithStyle(context, 3,
                 new NotificationCompat.InboxStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Inbox Style")
@@ -75,7 +85,7 @@ public class NotificationUtils {
                 .setContentText(context.getString(R.string.page2_text))
                 .build();
 
-        NotificationManagerCompat.from(context).notify(3,
+        NotificationManagerCompat.from(context).notify(4,
                 new WearableNotifications.Builder(builder)
                         .addPage(second)
                         .build());
@@ -96,7 +106,7 @@ public class NotificationUtils {
                                 context.getString(R.string.action_button),
                                 pendingIntent);
 
-        NotificationManagerCompat.from(context).notify(4,
+        NotificationManagerCompat.from(context).notify(5,
                 new WearableNotifications.Builder(builder)
                         .build());
     }
@@ -121,7 +131,7 @@ public class NotificationUtils {
                 .setChoices(choices)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(5,
+        NotificationManagerCompat.from(context).notify(6,
                 new WearableNotifications.Builder(builder)
                         .addRemoteInputForContentIntent(remoteInput)
                         .build());
@@ -148,7 +158,7 @@ public class NotificationUtils {
                 new NotificationCompat.Builder(context)
                         .setContentTitle(context.getString(R.string.action_title));
 
-        NotificationManagerCompat.from(context).notify(6,
+        NotificationManagerCompat.from(context).notify(7,
                 new WearableNotifications.Builder(builder)
                         .addAction(action)
                         .build());
@@ -179,8 +189,8 @@ public class NotificationUtils {
                 .setGroup(NOTIFICATION_GROUP, WearableNotifications.GROUP_ORDER_SUMMARY)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(7, first);
-        NotificationManagerCompat.from(context).notify(8, second);
-        NotificationManagerCompat.from(context).notify(9, summary);
+        NotificationManagerCompat.from(context).notify(8, first);
+        NotificationManagerCompat.from(context).notify(9, second);
+        NotificationManagerCompat.from(context).notify(10, summary);
     }
 }

@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 
         showTestNotification(this);
         showTestNotificationBigTextStyle(this);
+        showTestNotificationBigPictureStyle(this);
         showTestNotificationInboxStyle(this);
         showTestNotificationWithPages(this);
         showTestNotificationWithAction(this);
