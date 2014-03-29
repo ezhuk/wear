@@ -21,14 +21,15 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        showTestNotification(this);
-        showTestNotificationBigTextStyle(this);
-        showTestNotificationBigPictureStyle(this);
-        showTestNotificationInboxStyle(this);
-        showTestNotificationWithPages(this);
-        showTestNotificationWithAction(this);
-        showTestNotificationWithInputForPrimaryAction(this);
-        showTestNotificationWithInputForSecondaryAction(this);
+        showNotification(this);
+        showNotificationNoIcon(this);
+        showNotificationBigTextStyle(this);
+        showNotificationBigPictureStyle(this);
+        showNotificationInboxStyle(this);
+        showNotificationWithPages(this);
+        showNotificationWithAction(this);
+        showNotificationWithInputForPrimaryAction(this);
+        showNotificationWithInputForSecondaryAction(this);
         showGroupNotifications(this);
     }
 

@@ -22,7 +22,7 @@ public class NotificationUtils {
 
     private static final String NOTIFICATION_GROUP = "notification_group";
 
-    public static void showTestNotification(Context context) {
+    public static void showNotification(Context context) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -34,7 +34,20 @@ public class NotificationUtils {
                         .build());
     }
 
-    public static void showTestNotificationWithStyle(Context context,
+    public static void showNotificationNoIcon(Context context) {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(context.getString(R.string.content_title))
+                        .setContentText(context.getString(R.string.content_text));
+
+        NotificationManagerCompat.from(context).notify(1,
+                new WearableNotifications.Builder(builder)
+                        .setHintHideIcon(true)
+                        .build());
+    }
+
+    public static void showNotificationWithStyle(Context context,
                                                      int id,
                                                      NotificationCompat.Style style) {
         Notification notification = new WearableNotifications.Builder(
@@ -46,16 +59,16 @@ public class NotificationUtils {
         NotificationManagerCompat.from(context).notify(id, notification);
     }
 
-    public static void showTestNotificationBigTextStyle(Context context) {
-        showTestNotificationWithStyle(context, 1,
+    public static void showNotificationBigTextStyle(Context context) {
+        showNotificationWithStyle(context, 2,
                 new NotificationCompat.BigTextStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Text Style")
                         .bigText("Sample big text."));
     }
 
-    public static void showTestNotificationBigPictureStyle(Context context) {
-        showTestNotificationWithStyle(context, 2,
+    public static void showNotificationBigPictureStyle(Context context) {
+        showNotificationWithStyle(context, 3,
                 new NotificationCompat.BigPictureStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Picture Style")
@@ -63,8 +76,8 @@ public class NotificationUtils {
                                 context.getResources(), R.drawable.background)));
     }
 
-    public static void showTestNotificationInboxStyle(Context context) {
-        showTestNotificationWithStyle(context, 3,
+    public static void showNotificationInboxStyle(Context context) {
+        showNotificationWithStyle(context, 4,
                 new NotificationCompat.InboxStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Inbox Style")
@@ -72,7 +85,7 @@ public class NotificationUtils {
                         .addLine("Line 2"));
     }
 
-    public static void showTestNotificationWithPages(Context context) {
+    public static void showNotificationWithPages(Context context) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -85,13 +98,13 @@ public class NotificationUtils {
                 .setContentText(context.getString(R.string.page2_text))
                 .build();
 
-        NotificationManagerCompat.from(context).notify(4,
+        NotificationManagerCompat.from(context).notify(5,
                 new WearableNotifications.Builder(builder)
                         .addPage(second)
                         .build());
     }
 
-    public static void showTestNotificationWithAction(Context context) {
+    public static void showNotificationWithAction(Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(""));
         PendingIntent pendingIntent =
@@ -106,12 +119,12 @@ public class NotificationUtils {
                                 context.getString(R.string.action_button),
                                 pendingIntent);
 
-        NotificationManagerCompat.from(context).notify(5,
+        NotificationManagerCompat.from(context).notify(6,
                 new WearableNotifications.Builder(builder)
                         .build());
     }
 
-    public static void showTestNotificationWithInputForPrimaryAction(Context context) {
+    public static void showNotificationWithInputForPrimaryAction(Context context) {
         Intent intent = new Intent(ACTION_TEST);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(context, 0, intent, 0);
@@ -131,13 +144,13 @@ public class NotificationUtils {
                 .setChoices(choices)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(6,
+        NotificationManagerCompat.from(context).notify(7,
                 new WearableNotifications.Builder(builder)
                         .addRemoteInputForContentIntent(remoteInput)
                         .build());
     }
 
-    public static void showTestNotificationWithInputForSecondaryAction(Context context) {
+    public static void showNotificationWithInputForSecondaryAction(Context context) {
         Intent intent = new Intent(ACTION_TEST);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(context, 0, intent, 0);
@@ -158,7 +171,7 @@ public class NotificationUtils {
                 new NotificationCompat.Builder(context)
                         .setContentTitle(context.getString(R.string.action_title));
 
-        NotificationManagerCompat.from(context).notify(7,
+        NotificationManagerCompat.from(context).notify(8,
                 new WearableNotifications.Builder(builder)
                         .addAction(action)
                         .build());
@@ -189,8 +202,8 @@ public class NotificationUtils {
                 .setGroup(NOTIFICATION_GROUP, WearableNotifications.GROUP_ORDER_SUMMARY)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(8, first);
-        NotificationManagerCompat.from(context).notify(9, second);
-        NotificationManagerCompat.from(context).notify(10, summary);
+        NotificationManagerCompat.from(context).notify(9, first);
+        NotificationManagerCompat.from(context).notify(10, second);
+        NotificationManagerCompat.from(context).notify(11, summary);
     }
 }
