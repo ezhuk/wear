@@ -206,4 +206,8 @@ public class NotificationUtils {
         NotificationManagerCompat.from(context).notify(10, second);
         NotificationManagerCompat.from(context).notify(11, summary);
     }
+
+    public static void cancelAllNotifications(Context context) {
+        NotificationManagerCompat.from(context).cancelAll();
+    }
 }
