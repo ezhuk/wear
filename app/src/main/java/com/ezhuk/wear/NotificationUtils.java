@@ -47,6 +47,19 @@ public class NotificationUtils {
                         .build());
     }
 
+    public static void showNotificationMinPriority(Context context) {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(context.getString(R.string.content_title))
+                        .setContentText(context.getString(R.string.content_text));
+
+        NotificationManagerCompat.from(context).notify(2,
+                new WearableNotifications.Builder(builder)
+                        .setMinPriority()
+                        .build());
+    }
+
     public static void showNotificationWithStyle(Context context,
                                                      int id,
                                                      NotificationCompat.Style style) {
@@ -60,7 +73,7 @@ public class NotificationUtils {
     }
 
     public static void showNotificationBigTextStyle(Context context) {
-        showNotificationWithStyle(context, 2,
+        showNotificationWithStyle(context, 3,
                 new NotificationCompat.BigTextStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Text Style")
@@ -68,7 +81,7 @@ public class NotificationUtils {
     }
 
     public static void showNotificationBigPictureStyle(Context context) {
-        showNotificationWithStyle(context, 3,
+        showNotificationWithStyle(context, 4,
                 new NotificationCompat.BigPictureStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Picture Style")
@@ -77,7 +90,7 @@ public class NotificationUtils {
     }
 
     public static void showNotificationInboxStyle(Context context) {
-        showNotificationWithStyle(context, 4,
+        showNotificationWithStyle(context, 5,
                 new NotificationCompat.InboxStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Inbox Style")
@@ -98,7 +111,7 @@ public class NotificationUtils {
                 .setContentText(context.getString(R.string.page2_text))
                 .build();
 
-        NotificationManagerCompat.from(context).notify(5,
+        NotificationManagerCompat.from(context).notify(6,
                 new WearableNotifications.Builder(builder)
                         .addPage(second)
                         .build());
@@ -119,7 +132,7 @@ public class NotificationUtils {
                                 context.getString(R.string.action_button),
                                 pendingIntent);
 
-        NotificationManagerCompat.from(context).notify(6,
+        NotificationManagerCompat.from(context).notify(7,
                 new WearableNotifications.Builder(builder)
                         .build());
     }
@@ -144,7 +157,7 @@ public class NotificationUtils {
                 .setChoices(choices)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(7,
+        NotificationManagerCompat.from(context).notify(8,
                 new WearableNotifications.Builder(builder)
                         .addRemoteInputForContentIntent(remoteInput)
                         .build());
@@ -171,7 +184,7 @@ public class NotificationUtils {
                 new NotificationCompat.Builder(context)
                         .setContentTitle(context.getString(R.string.action_title));
 
-        NotificationManagerCompat.from(context).notify(8,
+        NotificationManagerCompat.from(context).notify(9,
                 new WearableNotifications.Builder(builder)
                         .addAction(action)
                         .build());
@@ -202,9 +215,9 @@ public class NotificationUtils {
                 .setGroup(NOTIFICATION_GROUP, WearableNotifications.GROUP_ORDER_SUMMARY)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(9, first);
-        NotificationManagerCompat.from(context).notify(10, second);
-        NotificationManagerCompat.from(context).notify(11, summary);
+        NotificationManagerCompat.from(context).notify(10, first);
+        NotificationManagerCompat.from(context).notify(11, second);
+        NotificationManagerCompat.from(context).notify(12, summary);
     }
 
     public static void cancelNotification(Context context, int id) {
