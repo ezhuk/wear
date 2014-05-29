@@ -1,9 +1,11 @@
 # Wear
 
+A simple app that displays various notifications on Android Wear.
+
 ## Dependencies
 
 The app requires the Android Wear preview support library, the Android Wear
-Preview app and the Android Wear Emulator (all available as part of the
+Preview app and the Android Wear Emulator (all available as a part of the
 Development Preview).
 
 ## Building
