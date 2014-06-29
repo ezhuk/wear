@@ -1,3 +1,7 @@
+// Copyright (c) 2014 Eugene Zhuk.
+// Use of this source code is governed by the MIT license that can be found
+// in the LICENSE file.
+
 package com.ezhuk.wear;
 
 import android.app.Activity;
@@ -5,8 +9,9 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+import static com.ezhuk.wear.NotificationUtils.*;
 
+public class MainActivity extends Activity {
     private TextView mTextView;
 
     @Override
@@ -20,5 +25,14 @@ public class MainActivity extends Activity {
                 mTextView = (TextView) stub.findViewById(R.id.text);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        showNotification(this);
+        showNotificationNoIcon(this);
+        showNotificationMinPriority(this);
     }
 }

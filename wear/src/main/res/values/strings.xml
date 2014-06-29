@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Wear</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
-
+    <string name="round_test">Round Test.</string>
+    <string name="square_test">Square Test.</string>
+    <string name="content_title">Basic Notification</string>
+    <string name="content_text">Sample text.</string>
 </resources>
