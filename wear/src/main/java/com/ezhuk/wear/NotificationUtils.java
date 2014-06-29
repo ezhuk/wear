@@ -13,8 +13,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
-//import android.support.wearable.notifications.RemoteInput;
-//import android.support.wearable.notifications.WearableNotifications;
+import android.support.v4.app.RemoteInput;
 
 
 public class NotificationUtils {
@@ -56,19 +55,19 @@ public class NotificationUtils {
                         .setPriority(NotificationCompat.PRIORITY_MIN);
 
         NotificationManagerCompat.from(context)
-                .notify(2,builder.build());
+                .notify(2, builder.build());
     }
-/*
+
     public static void showNotificationWithStyle(Context context,
-                                                     int id,
-                                                     NotificationCompat.Style style) {
-        Notification notification = new WearableNotifications.Builder(
+                                                 int id,
+                                                 NotificationCompat.Style style) {
+        NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setStyle(style))
-                .build();
+                        .setStyle(style);
 
-        NotificationManagerCompat.from(context).notify(id, notification);
+        NotificationManagerCompat.from(context)
+                .notify(id, builder.build());
     }
 
     public static void showNotificationBigTextStyle(Context context) {
@@ -110,9 +109,10 @@ public class NotificationUtils {
                 .setContentText(context.getString(R.string.page2_text))
                 .build();
 
-        NotificationManagerCompat.from(context).notify(6,
-                new WearableNotifications.Builder(builder)
+        NotificationManagerCompat.from(context)
+                .notify(6, new WearableExtender()
                         .addPage(second)
+                        .extend(builder)
                         .build());
     }
 
@@ -131,22 +131,14 @@ public class NotificationUtils {
                                 context.getString(R.string.action_button),
                                 pendingIntent);
 
-        NotificationManagerCompat.from(context).notify(7,
-                new WearableNotifications.Builder(builder)
-                        .build());
+        NotificationManagerCompat.from(context)
+                .notify(7, builder.build());
     }
 
     public static void showNotificationWithInputForPrimaryAction(Context context) {
         Intent intent = new Intent(ACTION_TEST);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(context, 0, intent, 0);
-
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(context.getString(R.string.action_title))
-                        .setContentText(context.getString(R.string.action_text))
-                        .setContentIntent(pendingIntent);
 
         String[] choices =
                 context.getResources().getStringArray(R.array.input_choices);
@@ -156,10 +148,24 @@ public class NotificationUtils {
                 .setChoices(choices)
                 .build();
 
-        NotificationManagerCompat.from(context).notify(8,
-                new WearableNotifications.Builder(builder)
-                        .addRemoteInputForContentIntent(remoteInput)
-                        .build());
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
+                        "Action",
+                         pendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(context.getString(R.string.action_title))
+                        .setContentText(context.getString(R.string.action_text))
+                        .setContentIntent(pendingIntent)
+                        .extend(new WearableExtender()
+                                .addAction(action));
+
+        NotificationManagerCompat.from(context)
+                .notify(8, builder.build());
     }
 
     public static void showNotificationWithInputForSecondaryAction(Context context) {
@@ -171,9 +177,8 @@ public class NotificationUtils {
                 .setLabel(context.getString(R.string.action_label))
                 .build();
 
-        WearableNotifications.Action action =
-                new WearableNotifications.Action.Builder(
-                        R.drawable.ic_launcher,
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
                         "Action",
                         pendingIntent)
                 .addRemoteInput(remoteInput)
@@ -181,49 +186,39 @@ public class NotificationUtils {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
-                        .setContentTitle(context.getString(R.string.action_title));
+                        .setContentTitle(context.getString(R.string.action_title))
+                        .extend(new WearableExtender()
+                                .addAction(action));
 
-        NotificationManagerCompat.from(context).notify(9,
-                new WearableNotifications.Builder(builder)
-                        .addAction(action)
-                        .build());
+        NotificationManagerCompat.from(context)
+                .notify(9, builder.build());
     }
 
     public static void showGroupNotifications(Context context) {
-        Notification first = new WearableNotifications.Builder(
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(context.getString(R.string.page1_title))
-                        .setContentText(context.getString(R.string.page1_text)))
+        Notification first = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(context.getString(R.string.page1_title))
+                .setContentText(context.getString(R.string.page1_text))
                 .setGroup(NOTIFICATION_GROUP)
                 .build();
 
-        Notification second = new WearableNotifications.Builder(
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(context.getString(R.string.page2_title))
-                        .setContentText(context.getString(R.string.page2_text)))
+        Notification second = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(context.getString(R.string.page2_title))
+                .setContentText(context.getString(R.string.page2_text))
                 .setGroup(NOTIFICATION_GROUP)
                 .build();
 
-        Notification summary = new WearableNotifications.Builder(
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(context.getString(R.string.summary_title))
-                        .setContentText(context.getString(R.string.summary_text)))
-                .setGroup(NOTIFICATION_GROUP, WearableNotifications.GROUP_ORDER_SUMMARY)
+        Notification summary = new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(context.getString(R.string.summary_title))
+                .setContentText(context.getString(R.string.summary_text))
+                .setGroup(NOTIFICATION_GROUP)
+                .setGroupSummary(true)
                 .build();
 
         NotificationManagerCompat.from(context).notify(10, first);
         NotificationManagerCompat.from(context).notify(11, second);
         NotificationManagerCompat.from(context).notify(12, summary);
     }
-
-    public static void cancelNotification(Context context, int id) {
-        NotificationManagerCompat.from(context).cancel(id);
-    }
-
-    public static void cancelAllNotifications(Context context) {
-        NotificationManagerCompat.from(context).cancelAll();
-    } */
 }

@@ -34,5 +34,13 @@ public class MainActivity extends Activity {
         showNotification(this);
         showNotificationNoIcon(this);
         showNotificationMinPriority(this);
+        showNotificationBigTextStyle(this);
+        showNotificationBigPictureStyle(this);
+        showNotificationInboxStyle(this);
+        showNotificationWithPages(this);
+        showNotificationWithAction(this);
+        showNotificationWithInputForPrimaryAction(this);
+        showNotificationWithInputForSecondaryAction(this);
+        showGroupNotifications(this);
     }
 }
