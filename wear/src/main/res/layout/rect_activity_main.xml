@@ -7,9 +7,10 @@
     tools:context=".MainActivity"
     tools:deviceIds="wear_square">
 
-    <TextView
-        android:id="@+id/text"
+    <Button
+        android:id="@+id/button_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/square_test" />
+        android:layout_gravity="center"
+        android:text="@string/button_text" />
 </LinearLayout>

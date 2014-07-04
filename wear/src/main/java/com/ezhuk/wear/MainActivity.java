@@ -7,13 +7,13 @@ package com.ezhuk.wear;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import static com.ezhuk.wear.NotificationUtils.*;
 
 public class MainActivity extends Activity {
-    private TextView mTextView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,15 +22,19 @@ public class MainActivity extends Activity {
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                mTextView = (TextView) stub.findViewById(R.id.text);
+                Button button = (Button) stub.findViewById(R.id.button_show);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showNotifications();
+                        moveTaskToBack(true);
+                    }
+                });
             }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+    private void showNotifications() {
         showNotification(this);
         showNotificationNoIcon(this);
         showNotificationMinPriority(this);

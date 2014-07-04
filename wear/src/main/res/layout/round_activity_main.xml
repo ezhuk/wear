@@ -6,11 +6,11 @@
     tools:context=".MainActivity"
     tools:deviceIds="wear_round">
 
-    <TextView
-        android:id="@+id/text"
+    <Button
+        android:id="@+id/button_show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/round_test" />
+        android:text="@string/button_text" />
 </RelativeLayout>
