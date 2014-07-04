@@ -2,6 +2,8 @@
 
 A simple app that displays various notifications on Android Wear.
 
+![wear](wear.gif)
+
 ## Dependencies
 
 The app requires the Android Wear preview support library, the Android Wear
