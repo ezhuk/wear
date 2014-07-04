@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
                 Button button = (Button) stub.findViewById(R.id.button_show);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         showNotifications();
                         moveTaskToBack(true);
                     }
