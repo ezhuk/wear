@@ -9,9 +9,9 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import static com.ezhuk.wear.NotificationUtils.*;
+
 
 public class MainActivity extends Activity {
     @Override
