@@ -6,14 +6,13 @@ A simple app that displays various Android Wear notifications.
 
 ## Dependencies
 
-The app requires the Android Wear preview support library, the Android Wear
-Preview app and the Android Wear Emulator (all available as a part of the
-Development Preview).
+The app requires Adroid Studio 0.8 or later, API level 18 or higher on a
+handset, API level 20 on the wear device and Android Support Library v4 or v13.
 
 ## Building
 
-* Import the project into Android Studio or Eclipse.
-* Build and run on the Android Wear Emulator.
+* Import the project into Android Studio.
+* Build and run on Android Wear or Wear AVD.
 
 ## License
 
