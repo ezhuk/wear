@@ -10,10 +10,13 @@ import android.support.wearable.view.WatchViewStub;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
+
 import static com.ezhuk.wear.NotificationUtils.*;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements MessageApi.MessageListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,11 @@ public class MainActivity extends Activity {
                 });
             }
         });
+    }
+
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        // TODO
     }
 
     private void showNotifications() {
