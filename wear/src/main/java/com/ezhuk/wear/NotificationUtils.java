@@ -33,6 +33,17 @@ public class NotificationUtils {
                 .notify(0, builder.build());
     }
 
+    public static void showNotification(Context context, String title, String text) {
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(title)
+                        .setContentText(text);
+
+        NotificationManagerCompat.from(context)
+                .notify(0, builder.build());
+    }
+
     public static void showNotificationNoIcon(Context context) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)

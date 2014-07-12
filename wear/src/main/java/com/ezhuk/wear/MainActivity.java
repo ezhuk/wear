@@ -17,6 +17,8 @@ import static com.ezhuk.wear.NotificationUtils.*;
 
 
 public class MainActivity extends Activity implements MessageApi.MessageListener {
+    public static final String MESSAGE_PATH = "/message";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,9 @@ public class MainActivity extends Activity implements MessageApi.MessageListener
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        // TODO
+        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
+            showNotification(this, "", "Message received.");
+        }
     }
 
     private void showNotifications() {
