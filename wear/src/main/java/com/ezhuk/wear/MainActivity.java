@@ -56,9 +56,9 @@ public class MainActivity extends Activity
     @Override
     protected void onStart() {
         super.onStart();
- //       if (!mResolvingError) {
+        if (null != mGoogleApiClient && !mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
- //       }
+        }
     }
 
     @Override
