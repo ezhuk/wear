@@ -37,7 +37,8 @@ public class MainActivity extends FragmentActivity
     private static final String ERROR_DIALOG = "ERR";
 
     private boolean mResolvingError = false;
-    private static final int RESOLVE_ERROR = 1010;
+    private static final int REQUEST_RESOLVE_ERROR = 1010;
+    private static final String STATE_RESOLVE_ERROR = "RESOLVE_ERROR";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -51,6 +52,14 @@ public class MainActivity extends FragmentActivity
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
+        mResolvingError = (savedInstanceState != null
+                && savedInstanceState.getBoolean(STATE_RESOLVE_ERROR, false));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(STATE_RESOLVE_ERROR, mResolvingError);
     }
 
     @Override
@@ -183,6 +192,6 @@ public class MainActivity extends FragmentActivity
     }
 
     private void sendText(String text) {
-        new SendTextTask().execute(text);
+       new SendTextTask().execute(text);
     }
 }
