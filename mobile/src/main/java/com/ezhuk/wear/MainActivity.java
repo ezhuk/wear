@@ -4,7 +4,6 @@
 
 package com.ezhuk.wear;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +30,8 @@ import com.google.android.gms.wearable.Wearable;
 
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks,
-                   GoogleApiClient.OnConnectionFailedListener {
+                   GoogleApiClient.OnConnectionFailedListener,
+                   NodeApi.NodeListener {
     private static final String TAG = "SendTextTask";
     private static final String MESSAGE_PATH = "/message";
     private static final String ERROR_DIALOG = "ERR";
@@ -90,28 +90,31 @@ public class MainActivity extends FragmentActivity
 
     @Override
     protected void onStop() {
+        Wearable.NodeApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
         super.onStop();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        // empty
+        Log.e(TAG, "onConnected:");
+        Wearable.NodeApi.addListener(mGoogleApiClient, this);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        // empty
+        Log.e(TAG, "onConnectionSuspended:");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
+        Log.e(TAG, "onConnectionFailed:");
         if (mResolvingError) {
             return;
         } else if (result.hasResolution()) {
             try {
                 mResolvingError = true;
-                result.startResolutionForResult(this, RESOLVE_ERROR);
+                result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
             } catch (IntentSender.SendIntentException ex) {
                 mGoogleApiClient.connect();
             }
@@ -119,6 +122,16 @@ public class MainActivity extends FragmentActivity
             showErrorDialog(result.getErrorCode());
             mResolvingError = true;
         }
+    }
+
+    @Override
+    public void onPeerConnected(Node peer) {
+        Log.e(TAG, "onPeerConnected: " + peer.getId());
+    }
+
+    @Override
+    public void onPeerDisconnected(Node peer) {
+        Log.e(TAG, "onPeerDisconnected: " + peer.getId());
     }
 
     private void showErrorDialog(int error) {
@@ -130,6 +143,7 @@ public class MainActivity extends FragmentActivity
     }
 
     public void onDialogDismissed() {
+        Log.e(TAG, "onDialogDismissed:");
         mResolvingError = false;
     }
 
@@ -142,7 +156,7 @@ public class MainActivity extends FragmentActivity
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             int errorCode = this.getArguments().getInt(ERROR_DIALOG);
             return GooglePlayServicesUtil
-                    .getErrorDialog(errorCode, this.getActivity(), RESOLVE_ERROR);
+                    .getErrorDialog(errorCode, this.getActivity(), REQUEST_RESOLVE_ERROR);
         }
 
         @Override
@@ -153,7 +167,8 @@ public class MainActivity extends FragmentActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (RESOLVE_ERROR == requestCode) {
+        Log.e(TAG, "onActivityResult:");
+        if (REQUEST_RESOLVE_ERROR == requestCode) {
             mResolvingError = false;
 
             if (RESULT_OK == resultCode) {
