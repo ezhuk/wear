@@ -5,8 +5,10 @@
 package com.ezhuk.wear;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,6 +16,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 import static com.ezhuk.wear.NotificationUtils.*;
@@ -23,6 +27,7 @@ public class MainActivity extends Activity
         implements MessageApi.MessageListener,
                    GoogleApiClient.ConnectionCallbacks,
                    GoogleApiClient.OnConnectionFailedListener {
+    private static final String TAG = "MainActivity";
     public static final String MESSAGE_PATH = "/message";
 
     private GoogleApiClient mGoogleApiClient;
@@ -35,12 +40,20 @@ public class MainActivity extends Activity
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub stub) {
-                Button button = (Button) stub.findViewById(R.id.button_show);
-                button.setOnClickListener(new View.OnClickListener() {
+                Button buttonShow = (Button) stub.findViewById(R.id.button_show);
+                buttonShow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         showNotifications();
                         moveTaskToBack(true);
+                    }
+                });
+
+                Button buttonSend = (Button) stub.findViewById(R.id.button_send);
+                buttonSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sendMessage();
                     }
                 });
             }
@@ -104,5 +117,26 @@ public class MainActivity extends Activity
         showNotificationWithInputForPrimaryAction(this);
         showNotificationWithInputForSecondaryAction(this);
         showGroupNotifications(this);
+    }
+
+    private class SendTextTask extends AsyncTask<String, Void, Void> {
+        protected Void doInBackground(String... params) {
+            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi
+                    .getConnectedNodes(mGoogleApiClient).await();
+            for (Node node : nodes.getNodes()) {
+                MessageApi.SendMessageResult result = Wearable.MessageApi
+                        .sendMessage(mGoogleApiClient, node.getId(), MESSAGE_PATH, params[0].getBytes())
+                        .await();
+                if (!result.getStatus().isSuccess()) {
+                    Log.e(TAG, "[ERROR] could not send message (" + result.getStatus() + ")");
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private void sendMessage() {
+        new SendTextTask().execute("Test Message");
     }
 }
