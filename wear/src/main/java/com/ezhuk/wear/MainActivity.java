@@ -15,7 +15,6 @@ import android.widget.Button;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
@@ -23,11 +22,9 @@ import com.google.android.gms.wearable.Wearable;
 import static com.ezhuk.wear.NotificationUtils.*;
 
 
-public class MainActivity extends Activity
-        implements MessageApi.MessageListener,
-                   GoogleApiClient.ConnectionCallbacks,
-                   GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = "MainActivity";
+public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+    private static final String TAG = "Wear.MainActivity";
     public static final String MESSAGE_PATH = "/message";
 
     private GoogleApiClient mGoogleApiClient;
@@ -77,7 +74,6 @@ public class MainActivity extends Activity
     @Override
     protected void onStop() {
         if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
-            Wearable.MessageApi.removeListener(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
         }
         super.onStop();
@@ -85,7 +81,7 @@ public class MainActivity extends Activity
 
     @Override
     public void onConnected(Bundle bundle) {
-        Wearable.MessageApi.addListener(mGoogleApiClient, this);
+        // empty
     }
 
     @Override
@@ -96,13 +92,6 @@ public class MainActivity extends Activity
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         // empty
-    }
-
-    @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
-            showNotification(this, "", "Message received.");
-        }
     }
 
     private void showNotifications() {
@@ -137,6 +126,6 @@ public class MainActivity extends Activity
     }
 
     private void sendMessage() {
-        new SendTextTask().execute("Test Message");
+        new SendTextTask().execute(getString(R.string.message_text));
     }
 }

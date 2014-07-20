@@ -22,4 +22,5 @@
         <item>Second item</item>
         <item>Third item</item>
     </string-array>
+    <string name="message_text">Test Message</string>
 </resources>
