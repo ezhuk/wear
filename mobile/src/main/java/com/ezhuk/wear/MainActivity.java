@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
@@ -31,8 +33,9 @@ import com.google.android.gms.wearable.Wearable;
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks,
                    GoogleApiClient.OnConnectionFailedListener,
+                   MessageApi.MessageListener,
                    NodeApi.NodeListener {
-    private static final String TAG = "SendTextTask";
+    private static final String TAG = "Mobile.MainActivity";
     private static final String MESSAGE_PATH = "/message";
     private static final String ERROR_DIALOG = "ERR";
 
@@ -91,6 +94,7 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onStop() {
         Wearable.NodeApi.removeListener(mGoogleApiClient, this);
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
         super.onStop();
     }
@@ -99,6 +103,7 @@ public class MainActivity extends FragmentActivity
     public void onConnected(Bundle bundle) {
         Log.e(TAG, "onConnected:");
         Wearable.NodeApi.addListener(mGoogleApiClient, this);
+        Wearable.MessageApi.addListener(mGoogleApiClient, this);
     }
 
     @Override
@@ -178,35 +183,10 @@ public class MainActivity extends FragmentActivity
         }
     }
 
-    public void onSendText(View view) {
-        EditText editText = (EditText) findViewById(R.id.text);
-        String text = editText.getText().toString();
-        if (!text.isEmpty()) {
-            editText.setText("");
-            sendText(text);
-        } else {
-            Toast.makeText(this, "Enter text", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
+            Log.e(TAG, "onMessageReceived: '" + new String(messageEvent.getData()) + "'");
         }
-    }
-
-    private class SendTextTask extends AsyncTask<String, Void, Void> {
-        protected Void doInBackground(String... params) {
-            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi
-                    .getConnectedNodes(mGoogleApiClient).await();
-            for (Node node : nodes.getNodes()) {
-                MessageApi.SendMessageResult result = Wearable.MessageApi
-                        .sendMessage(mGoogleApiClient, node.getId(), MESSAGE_PATH, params[0].getBytes())
-                        .await();
-                if (!result.getStatus().isSuccess()) {
-                    Log.e(TAG, "[ERROR] could not send message (" + result.getStatus() + ")");
-                }
-            }
-
-            return null;
-        }
-    }
-
-    private void sendText(String text) {
-       new SendTextTask().execute(text);
     }
 }
