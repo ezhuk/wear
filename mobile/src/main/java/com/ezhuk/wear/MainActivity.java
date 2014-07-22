@@ -8,16 +8,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -186,7 +182,16 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         if (messageEvent.getPath().equals(MESSAGE_PATH)) {
-            Log.e(TAG, "onMessageReceived: '" + new String(messageEvent.getData()) + "'");
+            final String param = new String(messageEvent.getData());
+            Log.e(TAG, "onMessageReceived: '" + param + "'");
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), param, Toast.LENGTH_SHORT)
+                            .show();
+                }
+            });
         }
     }
 }
