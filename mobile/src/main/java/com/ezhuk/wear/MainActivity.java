@@ -21,16 +21,13 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
 
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks,
                    GoogleApiClient.OnConnectionFailedListener,
-                   MessageApi.MessageListener,
-                   NodeApi.NodeListener {
+                   MessageApi.MessageListener {
     private static final String TAG = "Mobile.MainActivity";
     private static final String MESSAGE_PATH = "/message";
     private static final String ERROR_DIALOG = "ERR";
@@ -89,7 +86,6 @@ public class MainActivity extends FragmentActivity
 
     @Override
     protected void onStop() {
-        Wearable.NodeApi.removeListener(mGoogleApiClient, this);
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
         super.onStop();
@@ -98,7 +94,6 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onConnected(Bundle bundle) {
         Log.e(TAG, "onConnected:");
-        Wearable.NodeApi.addListener(mGoogleApiClient, this);
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
     }
 
@@ -123,16 +118,6 @@ public class MainActivity extends FragmentActivity
             showErrorDialog(result.getErrorCode());
             mResolvingError = true;
         }
-    }
-
-    @Override
-    public void onPeerConnected(Node peer) {
-        Log.e(TAG, "onPeerConnected: " + peer.getId());
-    }
-
-    @Override
-    public void onPeerDisconnected(Node peer) {
-        Log.e(TAG, "onPeerDisconnected: " + peer.getId());
     }
 
     private void showErrorDialog(int error) {
@@ -182,16 +167,17 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         if (messageEvent.getPath().equals(MESSAGE_PATH)) {
-            final String param = new String(messageEvent.getData());
-            Log.e(TAG, "onMessageReceived: '" + param + "'");
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), param, Toast.LENGTH_SHORT)
-                            .show();
-                }
-            });
+            showMessage(new String(messageEvent.getData()));
         }
+    }
+
+    private void showMessage(String message) {
+        final String param = message;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), param, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
