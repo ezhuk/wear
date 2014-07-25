@@ -19,6 +19,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
@@ -27,7 +30,8 @@ import com.google.android.gms.wearable.Wearable;
 public class MainActivity extends FragmentActivity
         implements GoogleApiClient.ConnectionCallbacks,
                    GoogleApiClient.OnConnectionFailedListener,
-                   MessageApi.MessageListener {
+                   MessageApi.MessageListener,
+                   DataApi.DataListener {
     private static final String TAG = "Mobile.MainActivity";
     private static final String MESSAGE_PATH = "/message";
     private static final String ERROR_DIALOG = "ERR";
@@ -87,6 +91,7 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onStop() {
         Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+        Wearable.DataApi.removeListener(mGoogleApiClient, this);
         mGoogleApiClient.disconnect();
         super.onStop();
     }
@@ -95,6 +100,7 @@ public class MainActivity extends FragmentActivity
     public void onConnected(Bundle bundle) {
         Log.e(TAG, "onConnected:");
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
+        Wearable.DataApi.addListener(mGoogleApiClient, this);
     }
 
     @Override
@@ -179,5 +185,13 @@ public class MainActivity extends FragmentActivity
                 Toast.makeText(getApplicationContext(), param, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        for (DataEvent event : dataEvents) {
+            Log.d(TAG, "onDataChanged: type=" + event.getType()
+                    + ", URI=" + event.getDataItem().getUri());
+        }
     }
 }
