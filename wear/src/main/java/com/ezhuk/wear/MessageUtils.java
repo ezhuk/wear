@@ -8,9 +8,14 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 
@@ -39,5 +44,13 @@ public class MessageUtils {
 
     public static void sendMessage(GoogleApiClient client, String path, String text) {
         new SendTextTask().execute(client, path, text);
+    }
+
+    public static void sendData(GoogleApiClient client, String path, Asset asset) {
+        PutDataMapRequest dataMap = PutDataMapRequest.create(path);
+        dataMap.getDataMap().putAsset("data", asset);
+        PutDataRequest request = dataMap.asPutDataRequest();
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
+                .putDataItem(client, request);
     }
 }
