@@ -20,8 +20,8 @@ import com.google.android.gms.wearable.Wearable;
 
 
 public class MessageUtils {
-    private static class SendTextTask extends AsyncTask<Object, Void, Void> {
-        private static final String TAG = "MessageUtils.SendTextTask";
+    private static class SendMessageTask extends AsyncTask<Object, Void, Void> {
+        private static final String TAG = "MessageUtils.SendMessageTask";
         protected Void doInBackground(Object... params) {
             GoogleApiClient client = (GoogleApiClient)params[0];
             String path = (String)params[1];
@@ -42,15 +42,31 @@ public class MessageUtils {
         }
     }
 
+    private static class SendDataTask extends AsyncTask<Object, Void, Void> {
+        private static final String TAG = "MessageUtils.SendDataTask";
+        protected Void doInBackground(Object... params) {
+            GoogleApiClient client = (GoogleApiClient)params[0];
+            String path = (String)params[1];
+            Asset asset = (Asset)params[2];
+
+            PutDataMapRequest dataMap = PutDataMapRequest.create(path);
+            dataMap.getDataMap().putAsset("data", asset);
+            PutDataRequest request = dataMap.asPutDataRequest();
+            DataApi.DataItemResult result = Wearable.DataApi
+                    .putDataItem(client, request).await();
+            if (!result.getStatus().isSuccess()) {
+                Log.e(TAG, "[ERROR] could not send data (" + result.getStatus() + ")");
+            }
+
+            return null;
+        }
+    }
+
     public static void sendMessage(GoogleApiClient client, String path, String text) {
-        new SendTextTask().execute(client, path, text);
+        new SendMessageTask().execute(client, path, text);
     }
 
     public static void sendData(GoogleApiClient client, String path, Asset asset) {
-        PutDataMapRequest dataMap = PutDataMapRequest.create(path);
-        dataMap.getDataMap().putAsset("data", asset);
-        PutDataRequest request = dataMap.asPutDataRequest();
-        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi
-                .putDataItem(client, request);
+        new SendDataTask().execute(client, path, asset);
     }
 }
