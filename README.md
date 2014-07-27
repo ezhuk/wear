@@ -6,8 +6,9 @@ A simple app that displays various Android Wear notifications.
 
 ## Dependencies
 
-The app requires Adroid Studio 0.8 or later, API level 18 or higher on a
-handset, API level 20 on the wear device and Android Support Library v4 or v13.
+The app requires Adroid Studio 0.8 or later, API level 18 or higher and
+Android Wear application on a handset, API level 20 on the wear device
+and Android Support Library v4 or v13.
 
 ## Building
 
