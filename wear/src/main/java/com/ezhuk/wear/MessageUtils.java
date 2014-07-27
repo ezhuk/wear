@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.MessageApi;

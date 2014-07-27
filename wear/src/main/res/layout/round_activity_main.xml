@@ -11,15 +11,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_centerVertical="false"
+        android:layout_above="@id/button_send_msg"
         android:text="@string/button_text" />
 
     <Button
-        android:id="@+id/button_send"
+        android:id="@+id/button_send_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/button_send_message" />
+
+    <Button
+        android:id="@+id/button_send_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="false"
-        android:layout_below="@id/button_show"
-        android:text="@string/button_send" />
+        android:layout_below="@id/button_send_msg"
+        android:text="@string/button_send_data" />
 </RelativeLayout>

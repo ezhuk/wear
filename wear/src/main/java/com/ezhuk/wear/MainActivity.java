@@ -41,12 +41,20 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                     }
                 });
 
-                Button buttonSend = (Button) stub.findViewById(R.id.button_send);
-                buttonSend.setOnClickListener(new View.OnClickListener() {
+                Button buttonSendMsg = (Button) stub.findViewById(R.id.button_send_msg);
+                buttonSendMsg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         sendMessage(mGoogleApiClient, MESSAGE_PATH,
                                 getString(R.string.message_text));
+                    }
+                });
+
+                Button buttonSendData = (Button) stub.findViewById(R.id.button_send_data);
+                buttonSendData.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO
                     }
                 });
             }

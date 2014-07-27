@@ -4,7 +4,8 @@
     <string name="round_test">Round Test.</string>
     <string name="square_test">Square Test.</string>
     <string name="button_text">Show Notifications</string>
-    <string name="button_send">Send Message</string>
+    <string name="button_send_message">Send Message</string>
+    <string name="button_send_data">Send Data</string>
     <string name="content_title">Basic Notification</string>
     <string name="content_text">Sample text.</string>
     <string name="summary_title">Summary Title</string>
