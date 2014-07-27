@@ -13,7 +13,8 @@ and Android Support Library v4 or v13.
 ## Building
 
 * Import the project into Android Studio.
-* Build and run on Android Wear or Wear AVD.
+* Build and run on Android Wear or Wear AVD (do not forget to pair with
+a handset).
 
 ## License
 
