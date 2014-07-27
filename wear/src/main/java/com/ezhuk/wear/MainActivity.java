@@ -5,6 +5,8 @@
 package com.ezhuk.wear;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.view.View;
@@ -12,7 +14,10 @@ import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.Wearable;
+
+import java.io.ByteArrayOutputStream;
 
 import static com.ezhuk.wear.NotificationUtils.*;
 import static com.ezhuk.wear.MessageUtils.*;
@@ -21,6 +26,7 @@ import static com.ezhuk.wear.MessageUtils.*;
 public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     public static final String MESSAGE_PATH = "/message";
+    public static final String DATA_PATH = "/data";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -54,7 +60,12 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
                 buttonSendData.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                                R.drawable.background);
+                        final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
+                        sendData(mGoogleApiClient, DATA_PATH,
+                                Asset.createFromBytes(byteStream.toByteArray()));
                     }
                 });
             }
