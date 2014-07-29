@@ -8,6 +8,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,12 +21,17 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
+
+import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends FragmentActivity
@@ -34,7 +41,9 @@ public class MainActivity extends FragmentActivity
                    DataApi.DataListener {
     private static final String TAG = "Mobile.MainActivity";
     private static final String MESSAGE_PATH = "/message";
+    private static final String DATA_PATH = "/data";
     private static final String ERROR_DIALOG = "ERR";
+    private static final int TIMEOUT = 5000;
 
     private boolean mResolvingError = false;
     private static final int REQUEST_RESOLVE_ERROR = 1010;
@@ -188,10 +197,28 @@ public class MainActivity extends FragmentActivity
     }
 
     @Override
-    public void onDataChanged(DataEventBuffer dataEvents) {
-        for (DataEvent event : dataEvents) {
+    public void onDataChanged(DataEventBuffer events) {
+        for (DataEvent event : events) {
             Log.d(TAG, "onDataChanged: type=" + event.getType()
                     + ", URI=" + event.getDataItem().getUri());
+            if (DataEvent.TYPE_CHANGED == event.getType()
+                    && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
+                DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
+                Asset asset = item.getDataMap().getAsset("data");
+                ConnectionResult result =
+                        mGoogleApiClient.blockingConnect(TIMEOUT, TimeUnit.MILLISECONDS);
+                if (result.isSuccess()) {
+                    InputStream stream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset)
+                            .await().getInputStream();
+                    if (null != asset) {
+                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        Intent intent = new Intent(this, ImageActivity.class);
+                        intent.putExtra("data", bitmap);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                }
+            }
         }
     }
 }
