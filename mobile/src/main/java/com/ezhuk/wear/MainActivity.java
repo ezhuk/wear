@@ -4,15 +4,12 @@
 
 package com.ezhuk.wear;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +31,7 @@ import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends FragmentActivity
+public class MainActivity extends Activity
         implements GoogleApiClient.ConnectionCallbacks,
                    GoogleApiClient.OnConnectionFailedListener,
                    MessageApi.MessageListener,
@@ -42,12 +39,7 @@ public class MainActivity extends FragmentActivity
     private static final String TAG = "Mobile.MainActivity";
     private static final String MESSAGE_PATH = "/message";
     private static final String DATA_PATH = "/data";
-    private static final String ERROR_DIALOG = "ERR";
     private static final int TIMEOUT = 5000;
-
-    private boolean mResolvingError = false;
-    private static final int REQUEST_RESOLVE_ERROR = 1010;
-    private static final String STATE_RESOLVE_ERROR = "RESOLVE_ERROR";
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -61,14 +53,6 @@ public class MainActivity extends FragmentActivity
                 .addOnConnectionFailedListener(this)
                 .addApi(Wearable.API)
                 .build();
-        mResolvingError = (savedInstanceState != null
-                && savedInstanceState.getBoolean(STATE_RESOLVE_ERROR, false));
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(STATE_RESOLVE_ERROR, mResolvingError);
     }
 
     @Override
@@ -93,15 +77,18 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (!mResolvingError)
+        if (null != mGoogleApiClient && !mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
+        }
     }
 
     @Override
     protected void onStop() {
-        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
-        Wearable.DataApi.removeListener(mGoogleApiClient, this);
-        mGoogleApiClient.disconnect();
+        if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
+            Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+            Wearable.DataApi.removeListener(mGoogleApiClient, this);
+            mGoogleApiClient.disconnect();
+        }
         super.onStop();
     }
 
@@ -120,69 +107,12 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         Log.e(TAG, "onConnectionFailed:");
-        if (mResolvingError) {
-            return;
-        } else if (result.hasResolution()) {
-            try {
-                mResolvingError = true;
-                result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
-            } catch (IntentSender.SendIntentException ex) {
-                mGoogleApiClient.connect();
-            }
-        } else {
-            showErrorDialog(result.getErrorCode());
-            mResolvingError = true;
-        }
-    }
-
-    private void showErrorDialog(int error) {
-        ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
-        Bundle args = new Bundle();
-        args.putInt(ERROR_DIALOG, error);
-        dialogFragment.setArguments(args);
-        dialogFragment.show(getSupportFragmentManager(), ERROR_DIALOG);
-    }
-
-    public void onDialogDismissed() {
-        Log.e(TAG, "onDialogDismissed:");
-        mResolvingError = false;
-    }
-
-    public static class ErrorDialogFragment extends DialogFragment {
-        public ErrorDialogFragment() {
-            // empty
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            int errorCode = this.getArguments().getInt(ERROR_DIALOG);
-            return GooglePlayServicesUtil
-                    .getErrorDialog(errorCode, this.getActivity(), REQUEST_RESOLVE_ERROR);
-        }
-
-        @Override
-        public void onDismiss(DialogInterface dialog) {
-            ((MainActivity)getActivity()).onDialogDismissed();
-        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e(TAG, "onActivityResult:");
-        if (REQUEST_RESOLVE_ERROR == requestCode) {
-            mResolvingError = false;
-
-            if (RESULT_OK == resultCode) {
-                if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected())
-                    mGoogleApiClient.connect();
-            }
-        }
-    }
-
-    @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
-            showMessage(new String(messageEvent.getData()));
+    public void onMessageReceived(MessageEvent event) {
+        if (event.getPath().equals(MESSAGE_PATH)) {
+            showMessage(new String(event.getData()));
         }
     }
 
@@ -201,7 +131,7 @@ public class MainActivity extends FragmentActivity
         for (DataEvent event : events) {
             Log.d(TAG, "onDataChanged: type=" + event.getType()
                     + ", URI=" + event.getDataItem().getUri());
-            if (DataEvent.TYPE_CHANGED == event.getType()
+/*            if (DataEvent.TYPE_CHANGED == event.getType()
                     && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
                 DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
                 Asset asset = item.getDataMap().getAsset("data");
@@ -218,7 +148,7 @@ public class MainActivity extends FragmentActivity
                         startActivity(intent);
                     }
                 }
-            }
+            }*/
         }
     }
 }
