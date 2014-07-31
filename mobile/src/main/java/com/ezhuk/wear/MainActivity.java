@@ -108,9 +108,9 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onMessageReceived(MessageEvent event) {
-        if (event.getPath().equals(MESSAGE_PATH)) {
-            showMessage(new String(event.getData()));
+    public void onMessageReceived(MessageEvent messageEvent) {
+        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
+            showMessage(new String(messageEvent.getData()));
         }
     }
 
