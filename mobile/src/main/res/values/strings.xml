@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Wear</string>
     <string name="action_settings">Settings</string>
+    <string name="img_desc">Image</string>
 </resources>
