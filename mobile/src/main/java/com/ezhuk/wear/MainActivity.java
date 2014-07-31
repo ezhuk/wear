@@ -5,18 +5,16 @@
 package com.ezhuk.wear;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataApi;
@@ -127,11 +125,11 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onDataChanged(DataEventBuffer events) {
-        for (DataEvent event : events) {
-            Log.d(TAG, "onDataChanged: type=" + event.getType()
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        for (DataEvent event : dataEvents) {
+            Log.e(TAG, "onDataChanged: type=" + event.getType()
                     + ", URI=" + event.getDataItem().getUri());
-/*            if (DataEvent.TYPE_CHANGED == event.getType()
+            if (DataEvent.TYPE_CHANGED == event.getType()
                     && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
                 DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
                 Asset asset = item.getDataMap().getAsset("data");
@@ -142,13 +140,11 @@ public class MainActivity extends Activity
                             .await().getInputStream();
                     if (null != asset) {
                         Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                        Intent intent = new Intent(this, ImageActivity.class);
-                        intent.putExtra("data", bitmap);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        ImageView view = (ImageView) findViewById(R.id.image_view);
+                        view.setImageBitmap(bitmap);
                     }
                 }
-            }*/
+            }
         }
     }
 }
