@@ -6,21 +6,18 @@
     android:orientation="vertical"
     tools:context=".MainActivity"
     tools:deviceIds="wear_square">
-
     <Button
         android:id="@+id/button_show"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/button_text" />
-
     <Button
         android:id="@+id/button_send_msg"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/button_send_message" />
-
     <Button
         android:id="@+id/button_send_data"
         android:layout_width="fill_parent"

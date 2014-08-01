@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,8 +24,10 @@ import static com.ezhuk.wear.NotificationUtils.*;
 import static com.ezhuk.wear.MessageUtils.*;
 
 
-public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
+public class MainActivity extends Activity implements
+        GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+    private static final String TAG = "MainActivity";
     public static final String MESSAGE_PATH = "/message";
     public static final String DATA_PATH = "/data";
 
@@ -96,17 +99,17 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
 
     @Override
     public void onConnected(Bundle bundle) {
-        // empty
+        Log.d(TAG, "onConnected");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        // empty
+        Log.d(TAG, "onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        // empty
+        Log.d(TAG, "onConnectionFailed");
     }
 
     private void showNotifications() {

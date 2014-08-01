@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:deviceIds="wear_round">
-
     <Button
         android:id="@+id/button_show"
         android:layout_width="wrap_content"
@@ -14,7 +13,6 @@
         android:layout_centerVertical="false"
         android:layout_above="@id/button_send_msg"
         android:text="@string/button_text" />
-
     <Button
         android:id="@+id/button_send_msg"
         android:layout_width="wrap_content"
@@ -22,7 +20,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/button_send_message" />
-
     <Button
         android:id="@+id/button_send_data"
         android:layout_width="wrap_content"
