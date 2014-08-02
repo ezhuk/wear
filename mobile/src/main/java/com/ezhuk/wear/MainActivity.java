@@ -29,14 +29,14 @@ import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends Activity
-        implements GoogleApiClient.ConnectionCallbacks,
-                   GoogleApiClient.OnConnectionFailedListener,
-                   MessageApi.MessageListener,
-                   DataApi.DataListener {
+public class MainActivity extends Activity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        MessageApi.MessageListener,
+        DataApi.DataListener {
     private static final String TAG = "Mobile.MainActivity";
-    private static final String MESSAGE_PATH = "/message";
-    private static final String DATA_PATH = "/data";
+    public static final String MESSAGE_PATH = "/message";
+    public static final String DATA_PATH = "/data";
     private static final int TIMEOUT = 5000;
 
     private GoogleApiClient mGoogleApiClient;
@@ -52,6 +52,7 @@ public class MainActivity extends Activity
                 .addApi(Wearable.API)
                 .build();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,19 +93,19 @@ public class MainActivity extends Activity
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.e(TAG, "onConnected:");
+        Log.d(TAG, "onConnected");
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.DataApi.addListener(mGoogleApiClient, this);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.e(TAG, "onConnectionSuspended:");
+        Log.d(TAG, "onConnectionSuspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.e(TAG, "onConnectionFailed:");
+        Log.d(TAG, "onConnectionFailed");
     }
 
     @Override
@@ -127,24 +128,24 @@ public class MainActivity extends Activity
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         for (DataEvent event : dataEvents) {
-            Log.e(TAG, "onDataChanged: type=" + event.getType()
+            Log.d(TAG, "onDataChanged: type=" + event.getType()
                     + ", URI=" + event.getDataItem().getUri());
-            if (DataEvent.TYPE_CHANGED == event.getType()
-                    && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
-                DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
-                Asset asset = item.getDataMap().getAsset("data");
-                ConnectionResult result =
-                        mGoogleApiClient.blockingConnect(TIMEOUT, TimeUnit.MILLISECONDS);
-                if (result.isSuccess()) {
-                    InputStream stream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset)
-                            .await().getInputStream();
-                    if (null != asset) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                        ImageView view = (ImageView) findViewById(R.id.image_view);
-                        view.setImageBitmap(bitmap);
-                    }
-                }
-            }
+//            if (DataEvent.TYPE_CHANGED == event.getType()
+//                    && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
+//                DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
+//                Asset asset = item.getDataMap().getAsset("data");
+//                ConnectionResult result =
+//                        mGoogleApiClient.blockingConnect(TIMEOUT, TimeUnit.MILLISECONDS);
+//                if (result.isSuccess()) {
+//                    InputStream stream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset)
+//                            .await().getInputStream();
+//                    if (null != asset) {
+//                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                        ImageView view = (ImageView) findViewById(R.id.image_view);
+//                        view.setImageBitmap(bitmap);
+//                    }
+//                }
+//            }
         }
     }
 }

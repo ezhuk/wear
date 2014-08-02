@@ -27,7 +27,7 @@ import static com.ezhuk.wear.MessageUtils.*;
 public class MainActivity extends Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "Wear.MainActivity";
     public static final String MESSAGE_PATH = "/message";
     public static final String DATA_PATH = "/data";
 
