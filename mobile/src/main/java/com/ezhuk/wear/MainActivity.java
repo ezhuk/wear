@@ -37,7 +37,9 @@ public class MainActivity extends Activity implements
     private static final String TAG = "Mobile.MainActivity";
     public static final String MESSAGE_PATH = "/message";
     public static final String DATA_PATH = "/data";
-    private static final int TIMEOUT = 5000;
+    private static final int TIMEOUT = 30;
+
+    private ImageView mImageView;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -45,6 +47,8 @@ public class MainActivity extends Activity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mImageView = (ImageView) findViewById(R.id.image_view);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -108,13 +112,6 @@ public class MainActivity extends Activity implements
         Log.d(TAG, "onConnectionFailed");
     }
 
-    @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
-            showMessage(new String(messageEvent.getData()));
-        }
-    }
-
     private void showMessage(String message) {
         final String param = message;
         runOnUiThread(new Runnable() {
@@ -126,26 +123,42 @@ public class MainActivity extends Activity implements
     }
 
     @Override
+    public void onMessageReceived(MessageEvent messageEvent) {
+        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
+            showMessage(new String(messageEvent.getData()));
+        }
+    }
+
+    private void showAsset(Bitmap bitmap) {
+        final Bitmap param = bitmap;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mImageView.setImageBitmap(param);
+            }
+        });
+    }
+
+    @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         for (DataEvent event : dataEvents) {
             Log.d(TAG, "onDataChanged: type=" + event.getType()
                     + ", URI=" + event.getDataItem().getUri());
-//            if (DataEvent.TYPE_CHANGED == event.getType()
-//                    && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
-//                DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
-//                Asset asset = item.getDataMap().getAsset("data");
-//                ConnectionResult result =
-//                        mGoogleApiClient.blockingConnect(TIMEOUT, TimeUnit.MILLISECONDS);
-//                if (result.isSuccess()) {
-//                    InputStream stream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset)
-//                            .await().getInputStream();
-//                    if (null != asset) {
-//                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
-//                        ImageView view = (ImageView) findViewById(R.id.image_view);
-//                        view.setImageBitmap(bitmap);
-//                    }
-//                }
-//            }
+            if (DataEvent.TYPE_CHANGED == event.getType()
+                    && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
+                DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
+                Asset asset = item.getDataMap().getAsset("data");
+                ConnectionResult result =
+                        mGoogleApiClient.blockingConnect(TIMEOUT, TimeUnit.SECONDS);
+                if (result.isSuccess()) {
+                    InputStream stream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset)
+                            .await().getInputStream();
+                    if (null != asset) {
+                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        showAsset(bitmap);
+                    }
+                }
+            }
         }
     }
 }
