@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -99,17 +98,17 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected");
+        // empty
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended");
+        // empty
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.d(TAG, "onConnectionFailed");
+        // empty
     }
 
     private void showNotifications() {

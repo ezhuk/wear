@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -39,16 +38,12 @@ public class MainActivity extends Activity implements
     public static final String DATA_PATH = "/data";
     private static final int TIMEOUT = 30;
 
-    private ImageView mImageView;
-
     private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mImageView = (ImageView) findViewById(R.id.image_view);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -97,19 +92,18 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected");
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.DataApi.addListener(mGoogleApiClient, this);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended");
+        // empty
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.d(TAG, "onConnectionFailed");
+        // empty
     }
 
     private void showMessage(String message) {
@@ -134,7 +128,8 @@ public class MainActivity extends Activity implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mImageView.setImageBitmap(param);
+                ImageView view = (ImageView) findViewById(R.id.image_view);
+                view.setImageBitmap(param);
             }
         });
     }
@@ -142,21 +137,24 @@ public class MainActivity extends Activity implements
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
         for (DataEvent event : dataEvents) {
-            Log.d(TAG, "onDataChanged: type=" + event.getType()
-                    + ", URI=" + event.getDataItem().getUri());
-            if (DataEvent.TYPE_CHANGED == event.getType()
-                    && event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
-                DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
-                Asset asset = item.getDataMap().getAsset("data");
-                ConnectionResult result =
-                        mGoogleApiClient.blockingConnect(TIMEOUT, TimeUnit.SECONDS);
-                if (result.isSuccess()) {
-                    InputStream stream = Wearable.DataApi.getFdForAsset(mGoogleApiClient, asset)
-                            .await().getInputStream();
-                    if (null != asset) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                        showAsset(bitmap);
+            if (event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
+                if (DataEvent.TYPE_CHANGED == event.getType()) {
+                    DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
+                    Asset asset = item.getDataMap().getAsset("data");
+
+                    ConnectionResult result = mGoogleApiClient
+                            .blockingConnect(TIMEOUT, TimeUnit.SECONDS);
+                    if (result.isSuccess()) {
+                        InputStream stream = Wearable.DataApi
+                                .getFdForAsset(mGoogleApiClient, asset)
+                                .await().getInputStream();
+                        if (null != asset) {
+                            Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                            showAsset(bitmap);
+                        }
                     }
+                } else if (DataEvent.TYPE_DELETED == event.getType()) {
+                    // TODO
                 }
             }
         }
