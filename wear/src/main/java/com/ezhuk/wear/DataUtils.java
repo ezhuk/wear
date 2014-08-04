@@ -18,7 +18,7 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 
-public class MessageUtils {
+public class DataUtils {
     private static class SendMessageTask extends AsyncTask<Object, Void, Void> {
         private static final String TAG = "MessageUtils.SendMessageTask";
         protected Void doInBackground(Object... params) {

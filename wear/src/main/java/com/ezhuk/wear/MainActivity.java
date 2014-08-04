@@ -20,7 +20,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.io.ByteArrayOutputStream;
 
 import static com.ezhuk.wear.NotificationUtils.*;
-import static com.ezhuk.wear.MessageUtils.*;
+import static com.ezhuk.wear.DataUtils.*;
 
 
 public class MainActivity extends Activity implements
