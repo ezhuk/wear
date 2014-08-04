@@ -1,6 +1,7 @@
 # Wear
 
-A simple app that displays various Android Wear notifications.
+A simple app that displays various Android Wear notifications and allows
+to send messages and assets from wearable to handheld.
 
 ![wear](wear.gif)
 
