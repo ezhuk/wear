@@ -22,6 +22,12 @@ public class NotificationUtils {
 
     private static final String NOTIFICATION_GROUP = "notification_group";
 
+    private static int NOTIFICATION_ID = 0;
+
+    private static synchronized int getNewID() {
+        return NOTIFICATION_ID++;
+    }
+
     public static void showNotification(Context context) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context)
@@ -30,18 +36,7 @@ public class NotificationUtils {
                         .setContentText(context.getString(R.string.content_text));
 
         NotificationManagerCompat.from(context)
-                .notify(0, builder.build());
-    }
-
-    public static void showNotification(Context context, String title, String text) {
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(title)
-                        .setContentText(text);
-
-        NotificationManagerCompat.from(context)
-                .notify(0, builder.build());
+                .notify(getNewID(), builder.build());
     }
 
     public static void showNotificationNoIcon(Context context) {
@@ -54,7 +49,7 @@ public class NotificationUtils {
                                 .setHintHideIcon(true));
 
         NotificationManagerCompat.from(context)
-                .notify(1, builder.build());
+                .notify(getNewID(), builder.build());
     }
 
     public static void showNotificationMinPriority(Context context) {
@@ -66,7 +61,7 @@ public class NotificationUtils {
                         .setPriority(NotificationCompat.PRIORITY_MIN);
 
         NotificationManagerCompat.from(context)
-                .notify(2, builder.build());
+                .notify(getNewID(), builder.build());
     }
 
     public static void showNotificationWithStyle(Context context,
@@ -82,7 +77,7 @@ public class NotificationUtils {
     }
 
     public static void showNotificationBigTextStyle(Context context) {
-        showNotificationWithStyle(context, 3,
+        showNotificationWithStyle(context, getNewID(),
                 new NotificationCompat.BigTextStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Text Style")
@@ -90,7 +85,7 @@ public class NotificationUtils {
     }
 
     public static void showNotificationBigPictureStyle(Context context) {
-        showNotificationWithStyle(context, 4,
+        showNotificationWithStyle(context, getNewID(),
                 new NotificationCompat.BigPictureStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Picture Style")
@@ -99,7 +94,7 @@ public class NotificationUtils {
     }
 
     public static void showNotificationInboxStyle(Context context) {
-        showNotificationWithStyle(context, 5,
+        showNotificationWithStyle(context, getNewID(),
                 new NotificationCompat.InboxStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Inbox Style")
@@ -121,7 +116,7 @@ public class NotificationUtils {
                 .build();
 
         NotificationManagerCompat.from(context)
-                .notify(6, new WearableExtender()
+                .notify(getNewID(), new WearableExtender()
                         .addPage(second)
                         .extend(builder)
                         .build());
@@ -143,7 +138,7 @@ public class NotificationUtils {
                                 pendingIntent);
 
         NotificationManagerCompat.from(context)
-                .notify(7, builder.build());
+                .notify(getNewID(), builder.build());
     }
 
     public static void showNotificationWithInputForPrimaryAction(Context context) {
@@ -176,7 +171,7 @@ public class NotificationUtils {
                                 .addAction(action));
 
         NotificationManagerCompat.from(context)
-                .notify(8, builder.build());
+                .notify(getNewID(), builder.build());
     }
 
     public static void showNotificationWithInputForSecondaryAction(Context context) {
@@ -202,7 +197,7 @@ public class NotificationUtils {
                                 .addAction(action));
 
         NotificationManagerCompat.from(context)
-                .notify(9, builder.build());
+                .notify(getNewID(), builder.build());
     }
 
     public static void showGroupNotifications(Context context) {
@@ -226,10 +221,11 @@ public class NotificationUtils {
                 .setContentText(context.getString(R.string.summary_text))
                 .setGroup(NOTIFICATION_GROUP)
                 .setGroupSummary(true)
+                
                 .build();
 
-        NotificationManagerCompat.from(context).notify(10, first);
-        NotificationManagerCompat.from(context).notify(11, second);
-        NotificationManagerCompat.from(context).notify(12, summary);
+        NotificationManagerCompat.from(context).notify(getNewID(), first);
+        NotificationManagerCompat.from(context).notify(getNewID(), second);
+        NotificationManagerCompat.from(context).notify(getNewID(), summary);
     }
 }
