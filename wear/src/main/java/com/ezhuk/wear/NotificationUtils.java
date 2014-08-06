@@ -29,51 +29,42 @@ public class NotificationUtils {
     }
 
     public static void showNotification(Context context) {
-        NotificationCompat.Builder builder =
+        NotificationManagerCompat.from(context).notify(getNewID(),
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(context.getString(R.string.content_title))
-                        .setContentText(context.getString(R.string.content_text));
-
-        NotificationManagerCompat.from(context)
-                .notify(getNewID(), builder.build());
+                        .setContentText(context.getString(R.string.content_text))
+                        .build());
     }
 
     public static void showNotificationNoIcon(Context context) {
-        NotificationCompat.Builder builder =
+        NotificationManagerCompat.from(context).notify(getNewID(),
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(context.getString(R.string.content_title))
                         .setContentText(context.getString(R.string.content_text))
-                        .extend(new WearableExtender()
-                                .setHintHideIcon(true));
-
-        NotificationManagerCompat.from(context)
-                .notify(getNewID(), builder.build());
+                        .extend(new WearableExtender().setHintHideIcon(true))
+                        .build());
     }
 
     public static void showNotificationMinPriority(Context context) {
-        NotificationCompat.Builder builder =
+        NotificationManagerCompat.from(context).notify(getNewID(),
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(context.getString(R.string.content_title))
                         .setContentText(context.getString(R.string.content_text))
-                        .setPriority(NotificationCompat.PRIORITY_MIN);
-
-        NotificationManagerCompat.from(context)
-                .notify(getNewID(), builder.build());
+                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .build());
     }
 
-    public static void showNotificationWithStyle(Context context,
+    private static void showNotificationWithStyle(Context context,
                                                  int id,
                                                  NotificationCompat.Style style) {
-        NotificationCompat.Builder builder =
+        NotificationManagerCompat.from(context).notify(id,
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setStyle(style);
-
-        NotificationManagerCompat.from(context)
-                .notify(id, builder.build());
+                        .setStyle(style)
+                        .build());
     }
 
     public static void showNotificationBigTextStyle(Context context) {
@@ -221,7 +212,6 @@ public class NotificationUtils {
                 .setContentText(context.getString(R.string.summary_text))
                 .setGroup(NOTIFICATION_GROUP)
                 .setGroupSummary(true)
-                
                 .build();
 
         NotificationManagerCompat.from(context).notify(getNewID(), first);
