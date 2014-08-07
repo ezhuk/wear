@@ -47,19 +47,23 @@ public class NotificationUtils {
                         .build());
     }
 
-    public static void showNotificationMinPriority(Context context) {
-        NotificationManagerCompat.from(context).notify(getNewID(),
+    private static void showNotificationWithPriority(Context context, int id, int priority) {
+        NotificationManagerCompat.from(context).notify(id,
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(context.getString(R.string.content_title))
                         .setContentText(context.getString(R.string.content_text))
-                        .setPriority(NotificationCompat.PRIORITY_MIN)
+                        .setPriority(priority)
                         .build());
     }
 
-    private static void showNotificationWithStyle(Context context,
-                                                 int id,
-                                                 NotificationCompat.Style style) {
+    public static void showNotificationMinPriority(Context context) {
+        showNotificationWithPriority(context, getNewID(),
+                NotificationCompat.PRIORITY_MIN);
+    }
+
+    private static void showNotificationWithStyle(Context context, int id,
+                                                  NotificationCompat.Style style) {
         NotificationManagerCompat.from(context).notify(id,
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
