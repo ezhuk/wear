@@ -19,7 +19,6 @@ import android.support.v4.app.RemoteInput;
 public class NotificationUtils {
     private static final String ACTION_TEST = "com.ezhuk.wear.ACTION";
     private static final String ACTION_EXTRA = "action";
-    private static final String NOTIFICATION_GROUP = "notification_group";
 
     private static int NOTIFICATION_ID = 0;
 
@@ -183,26 +182,26 @@ public class NotificationUtils {
                         .build());
     }
 
-    public static void showGroupNotifications(Context context) {
+    public static void showGroupNotifications(Context context, String group) {
         Notification first = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(context.getString(R.string.page1_title))
                 .setContentText(context.getString(R.string.page1_text))
-                .setGroup(NOTIFICATION_GROUP)
+                .setGroup(group)
                 .build();
 
         Notification second = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(context.getString(R.string.page2_title))
                 .setContentText(context.getString(R.string.page2_text))
-                .setGroup(NOTIFICATION_GROUP)
+                .setGroup(group)
                 .build();
 
         Notification summary = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle(context.getString(R.string.summary_title))
                 .setContentText(context.getString(R.string.summary_text))
-                .setGroup(NOTIFICATION_GROUP)
+                .setGroup(group)
                 .setGroupSummary(true)
                 .build();
 

@@ -123,6 +123,6 @@ public class MainActivity extends Activity implements
         showNotificationWithAction(this);
         showNotificationWithInputForPrimaryAction(this);
         showNotificationWithInputForSecondaryAction(this);
-        showGroupNotifications(this);
+        showGroupNotifications(this, "Group");
     }
 }
