@@ -8,7 +8,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -19,7 +19,6 @@ import android.support.v4.app.RemoteInput;
 public class NotificationUtils {
     private static final String ACTION_TEST = "com.ezhuk.wear.ACTION";
     private static final String ACTION_EXTRA = "action";
-
     private static final String NOTIFICATION_GROUP = "notification_group";
 
     private static int NOTIFICATION_ID = 0;
@@ -79,13 +78,12 @@ public class NotificationUtils {
                         .bigText("Sample big text."));
     }
 
-    public static void showNotificationBigPictureStyle(Context context) {
+    public static void showNotificationBigPictureStyle(Context context, Bitmap bitmap) {
         showNotificationWithStyle(context, getNewID(),
                 new NotificationCompat.BigPictureStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Picture Style")
-                        .bigPicture(BitmapFactory.decodeResource(
-                                context.getResources(), R.drawable.background)));
+                        .bigPicture(bitmap));
     }
 
     public static void showNotificationInboxStyle(Context context) {
@@ -110,8 +108,8 @@ public class NotificationUtils {
                 .setContentText(context.getString(R.string.page2_text))
                 .build();
 
-        NotificationManagerCompat.from(context)
-                .notify(getNewID(), new WearableExtender()
+        NotificationManagerCompat.from(context).notify(getNewID(),
+                new WearableExtender()
                         .addPage(second)
                         .extend(builder)
                         .build());
@@ -173,7 +171,8 @@ public class NotificationUtils {
                 .build();
 
         NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_launcher, "Action", pendingIntent)
+                new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
+                        "Action", pendingIntent)
                         .addRemoteInput(remoteInput)
                         .build();
 

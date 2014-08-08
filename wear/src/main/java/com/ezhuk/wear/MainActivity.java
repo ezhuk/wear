@@ -116,7 +116,8 @@ public class MainActivity extends Activity implements
         showNotificationNoIcon(this);
         showNotificationMinPriority(this);
         showNotificationBigTextStyle(this);
-        showNotificationBigPictureStyle(this);
+        showNotificationBigPictureStyle(this,
+                BitmapFactory.decodeResource(getResources(), R.drawable.background));
         showNotificationInboxStyle(this);
         showNotificationWithPages(this);
         showNotificationWithAction(this);
