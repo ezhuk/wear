@@ -123,17 +123,18 @@ public class NotificationUtils {
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(context, 0, intent, 0);
 
-        NotificationCompat.Builder builder =
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
+                        context.getString(R.string.action_button), pendingIntent)
+                        .build();
+
+        NotificationManagerCompat.from(context).notify(getNewID(),
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(context.getString(R.string.action_title))
                         .setContentText(context.getString(R.string.action_text))
-                        .addAction(R.drawable.ic_launcher,
-                                context.getString(R.string.action_button),
-                                pendingIntent);
-
-        NotificationManagerCompat.from(context)
-                .notify(getNewID(), builder.build());
+                        .addAction(action)
+                        .build());
     }
 
     public static void showNotificationWithInputForPrimaryAction(Context context) {
@@ -141,32 +142,25 @@ public class NotificationUtils {
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(context, 0, intent, 0);
 
-        String[] choices =
-                context.getResources().getStringArray(R.array.input_choices);
-
         RemoteInput remoteInput = new RemoteInput.Builder(ACTION_EXTRA)
                 .setLabel(context.getString(R.string.action_label))
-                .setChoices(choices)
+                .setChoices(context.getResources().getStringArray(R.array.input_choices))
                 .build();
 
         NotificationCompat.Action action =
                 new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
-                        "Action",
-                         pendingIntent)
+                        "Action", pendingIntent)
                         .addRemoteInput(remoteInput)
                         .build();
 
-        NotificationCompat.Builder builder =
+        NotificationManagerCompat.from(context).notify(getNewID(),
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(context.getString(R.string.action_title))
                         .setContentText(context.getString(R.string.action_text))
                         .setContentIntent(pendingIntent)
-                        .extend(new WearableExtender()
-                                .addAction(action));
-
-        NotificationManagerCompat.from(context)
-                .notify(getNewID(), builder.build());
+                        .extend(new WearableExtender().addAction(action))
+                        .build());
     }
 
     public static void showNotificationWithInputForSecondaryAction(Context context) {
@@ -179,20 +173,15 @@ public class NotificationUtils {
                 .build();
 
         NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
-                        "Action",
-                        pendingIntent)
-                .addRemoteInput(remoteInput)
-                .build();
+                new NotificationCompat.Action.Builder(R.drawable.ic_launcher, "Action", pendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
 
-        NotificationCompat.Builder builder =
+        NotificationManagerCompat.from(context).notify(getNewID(),
                 new NotificationCompat.Builder(context)
                         .setContentTitle(context.getString(R.string.action_title))
-                        .extend(new WearableExtender()
-                                .addAction(action));
-
-        NotificationManagerCompat.from(context)
-                .notify(getNewID(), builder.build());
+                        .extend(new WearableExtender().addAction(action))
+                        .build());
     }
 
     public static void showGroupNotifications(Context context) {
