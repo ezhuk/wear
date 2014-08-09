@@ -15,6 +15,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.support.v4.app.RemoteInput;
 
+import java.util.ArrayList;
+
 
 public class NotificationUtils {
     private static final String ACTION_TEST = "com.ezhuk.wear.ACTION";
@@ -69,12 +71,12 @@ public class NotificationUtils {
                         .build());
     }
 
-    public static void showNotificationBigTextStyle(Context context) {
+    public static void showNotificationBigTextStyle(Context context, String text) {
         showNotificationWithStyle(context, getNewID(),
                 new NotificationCompat.BigTextStyle()
                         .setSummaryText(context.getString(R.string.summary_text))
                         .setBigContentTitle("Big Text Style")
-                        .bigText("Sample big text."));
+                        .bigText(text));
     }
 
     public static void showNotificationBigPictureStyle(Context context, Bitmap bitmap) {
