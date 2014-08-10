@@ -28,31 +28,29 @@ public class NotificationUtils {
         return NOTIFICATION_ID++;
     }
 
-    public static void showNotification(Context context) {
-        NotificationManagerCompat.from(context).notify(getNewID(),
-                new NotificationCompat.Builder(context)
+    private static NotificationCompat.Builder createBasicNotificationBuilder(Context context) {
+        return new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(context.getString(R.string.content_title))
-                        .setContentText(context.getString(R.string.content_text))
+                        .setContentText(context.getString(R.string.content_text));
+    }
+
+    public static void showNotification(Context context) {
+        NotificationManagerCompat.from(context).notify(getNewID(),
+                createBasicNotificationBuilder(context)
                         .build());
     }
 
     public static void showNotificationNoIcon(Context context) {
         NotificationManagerCompat.from(context).notify(getNewID(),
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(context.getString(R.string.content_title))
-                        .setContentText(context.getString(R.string.content_text))
+                createBasicNotificationBuilder(context)
                         .extend(new WearableExtender().setHintHideIcon(true))
                         .build());
     }
 
     private static void showNotificationWithPriority(Context context, int id, int priority) {
         NotificationManagerCompat.from(context).notify(id,
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(context.getString(R.string.content_title))
-                        .setContentText(context.getString(R.string.content_text))
+                createBasicNotificationBuilder(context)
                         .setPriority(priority)
                         .build());
     }
