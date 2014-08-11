@@ -15,8 +15,6 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.support.v4.app.RemoteInput;
 
-import java.util.ArrayList;
-
 
 public class NotificationUtils {
     private static final String ACTION_TEST = "com.ezhuk.wear.ACTION";
