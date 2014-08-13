@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
         MessageApi.MessageListener,
         DataApi.DataListener {
     private static final String TAG = "Mobile.MainActivity";
@@ -47,7 +46,7 @@ public class MainActivity extends Activity implements
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
+                .addOnConnectionFailedListener(new ConnectionFailedListener())
                 .addApi(Wearable.API)
                 .build();
     }
@@ -101,9 +100,12 @@ public class MainActivity extends Activity implements
         // empty
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // empty
+    private class ConnectionFailedListener implements
+            GoogleApiClient.OnConnectionFailedListener {
+        @Override
+        public void onConnectionFailed(ConnectionResult result) {
+            // empty
+        }
     }
 
     private void showMessage(String message) {
