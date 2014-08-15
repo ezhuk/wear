@@ -21,19 +21,20 @@ import com.google.android.gms.wearable.Wearable;
 public class DataUtils {
     private static class SendMessageTask extends AsyncTask<Object, Void, Void> {
         private static final String TAG = "MessageUtils.SendMessageTask";
+
         protected Void doInBackground(Object... params) {
             GoogleApiClient client = (GoogleApiClient)params[0];
-            String path = (String)params[1];
-            String text = (String)params[2];
 
             NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi
-                    .getConnectedNodes(client).await();
+                    .getConnectedNodes(client)
+                    .await();
             for (Node node : nodes.getNodes()) {
                 MessageApi.SendMessageResult result = Wearable.MessageApi
-                        .sendMessage(client, node.getId(), path, text.getBytes())
+                        .sendMessage(client, node.getId(), (String)params[1],
+                                ((String)params[2]).getBytes())
                         .await();
                 if (!result.getStatus().isSuccess()) {
-                    Log.e(TAG, "[ERROR] could not send message (" + result.getStatus() + ")");
+                    Log.e(TAG, "could not send message (" + result.getStatus() + ")");
                 }
             }
 
@@ -43,18 +44,19 @@ public class DataUtils {
 
     private static class SendDataTask extends AsyncTask<Object, Void, Void> {
         private static final String TAG = "MessageUtils.SendDataTask";
+        private static final String ASSET_KEY = "data";
+
         protected Void doInBackground(Object... params) {
             GoogleApiClient client = (GoogleApiClient)params[0];
-            String path = (String)params[1];
-            Asset asset = (Asset)params[2];
 
-            PutDataMapRequest dataMap = PutDataMapRequest.create(path);
-            dataMap.getDataMap().putAsset("data", asset);
+            PutDataMapRequest dataMap = PutDataMapRequest.create((String)params[1]);
+            dataMap.getDataMap().putAsset(ASSET_KEY, (Asset)params[2]);
             PutDataRequest request = dataMap.asPutDataRequest();
             DataApi.DataItemResult result = Wearable.DataApi
-                    .putDataItem(client, request).await();
+                    .putDataItem(client, request)
+                    .await();
             if (!result.getStatus().isSuccess()) {
-                Log.e(TAG, "[ERROR] could not send data (" + result.getStatus() + ")");
+                Log.e(TAG, "could not send data (" + result.getStatus() + ")");
             }
 
             return null;

@@ -32,8 +32,9 @@ public class MainActivity extends Activity implements
         MessageApi.MessageListener,
         DataApi.DataListener {
     private static final String TAG = "Mobile.MainActivity";
-    public static final String MESSAGE_PATH = "/message";
-    public static final String DATA_PATH = "/data";
+    private static final String MESSAGE_PATH = "/message";
+    private static final String DATA_PATH = "/data";
+    private static final String ASSET_KEY = "data";
     private static final int TIMEOUT = 30;
 
     private GoogleApiClient mGoogleApiClient;
@@ -148,7 +149,7 @@ public class MainActivity extends Activity implements
             if (event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
                 if (DataEvent.TYPE_CHANGED == event.getType()) {
                     DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
-                    Asset asset = item.getDataMap().getAsset("data");
+                    Asset asset = item.getDataMap().getAsset(ASSET_KEY);
 
                     ConnectionResult result = mGoogleApiClient
                             .blockingConnect(TIMEOUT, TimeUnit.SECONDS);
