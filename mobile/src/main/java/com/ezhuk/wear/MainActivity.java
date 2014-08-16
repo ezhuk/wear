@@ -150,8 +150,17 @@ public class MainActivity extends Activity {
         });
     }
 
+    private void hideAsset() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageView view = (ImageView) findViewById(R.id.image_view);
+                view.setImageDrawable(null);
+            }
+        });
+    }
+
     private class DataListener implements DataApi.DataListener {
-        
         private static final String DATA_PATH = "/data";
         private static final String ASSET_KEY = "data";
         private static final int TIMEOUT = 30;
@@ -176,7 +185,7 @@ public class MainActivity extends Activity {
                             }
                         }
                     } else if (DataEvent.TYPE_DELETED == event.getType()) {
-                        // TODO
+                        hideAsset();
                     }
                 }
             }
