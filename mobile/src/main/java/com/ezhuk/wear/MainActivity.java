@@ -30,10 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
     private static final String TAG = "Mobile.MainActivity";
-    private static final String MESSAGE_PATH = "/message";
-    private static final String DATA_PATH = "/data";
-    private static final String ASSET_KEY = "data";
-    private static final int TIMEOUT = 30;
 
     private GoogleApiClient mGoogleApiClient;
     private MessageListener mMessageListener;
@@ -133,6 +129,8 @@ public class MainActivity extends Activity {
     }
 
     private class MessageListener implements MessageApi.MessageListener {
+        private static final String MESSAGE_PATH = "/message";
+
         @Override
         public void onMessageReceived(MessageEvent event) {
             if (event.getPath().equals(MESSAGE_PATH)) {
@@ -154,6 +152,10 @@ public class MainActivity extends Activity {
 
     private class DataListener implements DataApi.DataListener {
         
+        private static final String DATA_PATH = "/data";
+        private static final String ASSET_KEY = "data";
+        private static final int TIMEOUT = 30;
+
         @Override
         public void onDataChanged(DataEventBuffer dataEvents) {
             for (DataEvent event : dataEvents) {
