@@ -28,9 +28,7 @@ import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends Activity implements
-        MessageApi.MessageListener,
-        DataApi.DataListener {
+public class MainActivity extends Activity {
     private static final String TAG = "Mobile.MainActivity";
     private static final String MESSAGE_PATH = "/message";
     private static final String DATA_PATH = "/data";
@@ -38,6 +36,8 @@ public class MainActivity extends Activity implements
     private static final int TIMEOUT = 30;
 
     private GoogleApiClient mGoogleApiClient;
+    private MessageListener mMessageListener;
+    private DataListener mDataListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,9 @@ public class MainActivity extends Activity implements
                 .addOnConnectionFailedListener(new ConnectionFailedListener())
                 .addApi(Wearable.API)
                 .build();
+
+        mMessageListener = new MessageListener();
+        mDataListener = new DataListener();
     }
 
 
@@ -89,13 +92,13 @@ public class MainActivity extends Activity implements
     }
 
     private void addListeners() {
-        Wearable.MessageApi.addListener(mGoogleApiClient, this);
-        Wearable.DataApi.addListener(mGoogleApiClient, this);
+        Wearable.MessageApi.addListener(mGoogleApiClient, mMessageListener);
+        Wearable.DataApi.addListener(mGoogleApiClient, mDataListener);
     }
 
     private void removeListeners() {
-        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
-        Wearable.DataApi.removeListener(mGoogleApiClient, this);
+        Wearable.MessageApi.removeListener(mGoogleApiClient, mMessageListener);
+        Wearable.DataApi.removeListener(mGoogleApiClient, mDataListener);
     }
 
     private class ConnectionCallbacks implements
@@ -129,10 +132,12 @@ public class MainActivity extends Activity implements
         });
     }
 
-    @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        if (messageEvent.getPath().equals(MESSAGE_PATH)) {
-            showMessage(new String(messageEvent.getData()));
+    private class MessageListener implements MessageApi.MessageListener {
+        @Override
+        public void onMessageReceived(MessageEvent event) {
+            if (event.getPath().equals(MESSAGE_PATH)) {
+                showMessage(new String(event.getData()));
+            }
         }
     }
 
@@ -147,27 +152,30 @@ public class MainActivity extends Activity implements
         });
     }
 
-    @Override
-    public void onDataChanged(DataEventBuffer dataEvents) {
-        for (DataEvent event : dataEvents) {
-            if (event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
-                if (DataEvent.TYPE_CHANGED == event.getType()) {
-                    DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
-                    Asset asset = item.getDataMap().getAsset(ASSET_KEY);
+    private class DataListener implements DataApi.DataListener {
+        
+        @Override
+        public void onDataChanged(DataEventBuffer dataEvents) {
+            for (DataEvent event : dataEvents) {
+                if (event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
+                    if (DataEvent.TYPE_CHANGED == event.getType()) {
+                        DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
+                        Asset asset = item.getDataMap().getAsset(ASSET_KEY);
 
-                    ConnectionResult result = mGoogleApiClient
-                            .blockingConnect(TIMEOUT, TimeUnit.SECONDS);
-                    if (result.isSuccess()) {
-                        InputStream stream = Wearable.DataApi
-                                .getFdForAsset(mGoogleApiClient, asset)
-                                .await().getInputStream();
-                        if (null != asset) {
-                            Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                            showAsset(bitmap);
+                        ConnectionResult result = mGoogleApiClient
+                                .blockingConnect(TIMEOUT, TimeUnit.SECONDS);
+                        if (result.isSuccess()) {
+                            InputStream stream = Wearable.DataApi
+                                    .getFdForAsset(mGoogleApiClient, asset)
+                                    .await().getInputStream();
+                            if (null != asset) {
+                                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                                showAsset(bitmap);
+                            }
                         }
+                    } else if (DataEvent.TYPE_DELETED == event.getType()) {
+                        // TODO
                     }
-                } else if (DataEvent.TYPE_DELETED == event.getType()) {
-                    // TODO
                 }
             }
         }
