@@ -82,8 +82,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onStop() {
         if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
-            Wearable.MessageApi.removeListener(mGoogleApiClient, this);
-            Wearable.DataApi.removeListener(mGoogleApiClient, this);
+            removeListeners();
             mGoogleApiClient.disconnect();
         }
         super.onStop();
@@ -92,6 +91,11 @@ public class MainActivity extends Activity implements
     private void addListeners() {
         Wearable.MessageApi.addListener(mGoogleApiClient, this);
         Wearable.DataApi.addListener(mGoogleApiClient, this);
+    }
+
+    private void removeListeners() {
+        Wearable.MessageApi.removeListener(mGoogleApiClient, this);
+        Wearable.DataApi.removeListener(mGoogleApiClient, this);
     }
 
     private class ConnectionCallbacks implements
