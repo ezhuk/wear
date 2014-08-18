@@ -23,9 +23,7 @@ import static com.ezhuk.wear.NotificationUtils.*;
 import static com.ezhuk.wear.DataUtils.*;
 
 
-public class MainActivity extends Activity implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends Activity {
     private static final String TAG = "Wear.MainActivity";
     public static final String MESSAGE_PATH = "/message";
     public static final String DATA_PATH = "/data";
@@ -74,8 +72,8 @@ public class MainActivity extends Activity implements
         });
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(new ConnectionCallbacks())
+                .addOnConnectionFailedListener(new ConnectionFailedListener())
                 .addApi(Wearable.API)
                 .build();
     }
@@ -96,19 +94,25 @@ public class MainActivity extends Activity implements
         super.onStop();
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        // empty
+    private class ConnectionCallbacks implements
+            GoogleApiClient.ConnectionCallbacks {
+        @Override
+        public void onConnected(Bundle bundle) {
+            // empty
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+            // empty
+        }
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-        // empty
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // empty
+    private class ConnectionFailedListener implements
+            GoogleApiClient.OnConnectionFailedListener {
+        @Override
+        public void onConnectionFailed(ConnectionResult result) {
+            // empty
+        }
     }
 
     private void showNotifications() {
