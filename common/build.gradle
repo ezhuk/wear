@@ -1,11 +1,11 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 20
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "com.ezhuk.wear"
+        applicationId "com.ezhuk.wear.common"
         minSdkVersion 19
         targetSdkVersion 20
         versionCode 1
@@ -22,7 +22,4 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    wearApp project(':wear')
-    compile 'com.google.android.gms:play-services-wearable:+'
-    compile project(':common')
 }
