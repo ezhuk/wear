@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
                         sendData(mGoogleApiClient, DATA_PATH,
                                 Asset.createFromBytes(byteStream.toByteArray()));
+                        showConfirmation();
                     }
                 });
             }
