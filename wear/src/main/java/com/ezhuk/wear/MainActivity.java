@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.view.WatchViewStub;
 import android.view.View;
 import android.widget.Button;
@@ -132,10 +133,18 @@ public class MainActivity extends Activity {
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (0 < results.size()) {
                 sendMessage(mGoogleApiClient, MESSAGE_PATH, results.get(0));
+                showConfirmation();
             }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showConfirmation() {
+        Intent intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
+        intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                ConfirmationActivity.SUCCESS_ANIMATION);
+        startActivity(intent);
     }
 
     private void showNotifications() {
