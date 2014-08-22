@@ -145,6 +145,7 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(getApplicationContext(), ConfirmationActivity.class);
         intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
                 ConfirmationActivity.SUCCESS_ANIMATION);
+        intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE, "OK");
         startActivity(intent);
     }
 
