@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.ezhuk.wear.common.MessageListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Asset;
@@ -20,7 +21,6 @@ import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMapItem;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
 
@@ -47,6 +47,8 @@ public class MainActivity extends Activity {
                 .build();
 
         mMessageListener = new MessageListener();
+        mMessageListener.addCallback("/message", new MessageCallback());
+
         mDataListener = new DataListener();
     }
 
@@ -128,14 +130,10 @@ public class MainActivity extends Activity {
         });
     }
 
-    private class MessageListener implements MessageApi.MessageListener {
-        private static final String MESSAGE_PATH = "/message";
-
+    private class MessageCallback implements MessageListener.Callback {
         @Override
         public void onMessageReceived(MessageEvent event) {
-            if (event.getPath().equals(MESSAGE_PATH)) {
-                showMessage(new String(event.getData()));
-            }
+            showMessage(new String(event.getData()));
         }
     }
 

@@ -11,7 +11,7 @@ import java.util.Dictionary;
 
 
 public class MessageListener implements MessageApi.MessageListener {
-    static interface Callback {
+    public static interface Callback {
         void onMessageReceived(MessageEvent messageEvent);
     }
 
