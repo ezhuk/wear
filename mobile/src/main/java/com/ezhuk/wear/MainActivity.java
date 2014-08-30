@@ -13,13 +13,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.ezhuk.wear.common.DataListener;
 import com.ezhuk.wear.common.MessageListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Asset;
-import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
-import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Wearable;
@@ -30,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
     private static final String TAG = "Mobile.MainActivity";
+    private static final String MESSAGE_PATH = "/message";
+    private static final String DATA_PATH = "/data";
 
     private GoogleApiClient mGoogleApiClient;
     private MessageListener mMessageListener;
@@ -47,9 +48,10 @@ public class MainActivity extends Activity {
                 .build();
 
         mMessageListener = new MessageListener();
-        mMessageListener.addCallback("/message", new MessageCallback());
+        mMessageListener.addCallback(MESSAGE_PATH, new MessageCallback());
 
         mDataListener = new DataListener();
+        mDataListener.addCallback(DATA_PATH, new DataCallback());
     }
 
 
@@ -158,34 +160,29 @@ public class MainActivity extends Activity {
         });
     }
 
-    private class DataListener implements DataApi.DataListener {
-        private static final String DATA_PATH = "/data";
+    private class DataCallback implements DataListener.Callback {
         private static final String ASSET_KEY = "data";
         private static final int TIMEOUT = 30;
 
         @Override
-        public void onDataChanged(DataEventBuffer dataEvents) {
-            for (DataEvent event : dataEvents) {
-                if (event.getDataItem().getUri().getPath().equals(DATA_PATH)) {
-                    if (DataEvent.TYPE_CHANGED == event.getType()) {
-                        DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
-                        Asset asset = item.getDataMap().getAsset(ASSET_KEY);
+        public void onDataChanged(DataEvent event) {
+            if (DataEvent.TYPE_CHANGED == event.getType()) {
+                DataMapItem item = DataMapItem.fromDataItem(event.getDataItem());
+                Asset asset = item.getDataMap().getAsset(ASSET_KEY);
 
-                        ConnectionResult result = mGoogleApiClient
-                                .blockingConnect(TIMEOUT, TimeUnit.SECONDS);
-                        if (result.isSuccess()) {
-                            InputStream stream = Wearable.DataApi
-                                    .getFdForAsset(mGoogleApiClient, asset)
-                                    .await().getInputStream();
-                            if (null != asset) {
-                                Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                                showAsset(bitmap);
-                            }
-                        }
-                    } else if (DataEvent.TYPE_DELETED == event.getType()) {
-                        hideAsset();
+                ConnectionResult result = mGoogleApiClient
+                        .blockingConnect(TIMEOUT, TimeUnit.SECONDS);
+                if (result.isSuccess()) {
+                    InputStream stream = Wearable.DataApi
+                            .getFdForAsset(mGoogleApiClient, asset)
+                            .await().getInputStream();
+                    if (null != asset) {
+                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        showAsset(bitmap);
                     }
                 }
+            } else if (DataEvent.TYPE_DELETED == event.getType()) {
+                hideAsset();
             }
         }
     }
