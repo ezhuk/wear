@@ -12,13 +12,17 @@ import java.util.Dictionary;
 
 public class MessageListener implements MessageApi.MessageListener {
     public static interface Callback {
-        void onMessageReceived(MessageEvent messageEvent);
+        public void onMessageReceived(MessageEvent messageEvent);
     }
 
     private Dictionary<String, Callback> mCallbacks;
 
     public void addCallback(String path, Callback callback) {
         mCallbacks.put(path, callback);
+    }
+
+    public Callback getCallback(String path) {
+        return mCallbacks.get(path);
     }
 
     public void removeCallback(String path) {

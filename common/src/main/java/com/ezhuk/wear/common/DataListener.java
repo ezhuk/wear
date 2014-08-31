@@ -13,7 +13,7 @@ import java.util.Dictionary;
 
 public class DataListener implements DataApi.DataListener {
     public static interface Callback {
-        void onDataChanged(DataEvent event);
+        public void onDataChanged(DataEvent event);
     }
 
     private Dictionary<String, Callback> mCallbacks;
