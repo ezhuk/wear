@@ -22,6 +22,10 @@ public class DataListener implements DataApi.DataListener {
         mCallbacks.put(path, callback);
     }
 
+    public Callback getCallback(String path) {
+        return mCallbacks.get(path);
+    }
+
     public void removeCallback(String path) {
         mCallbacks.remove(path);
     }
