@@ -12,24 +12,22 @@ import junit.framework.TestCase;
 public class MessageListenerTest extends TestCase {
     private static final String MESSAGE_PATH = "/foo";
 
-    private static class CallbackResults {
+    private static class CallbackResult {
         public int mCount;
-        public String mPath;
-        public byte[] mData;
+        public MockEvent mEvent;
     }
 
     private static class MockCallback implements MessageListener.Callback {
-        private CallbackResults mResults;
+        private CallbackResult mResult;
 
-        public MockCallback(CallbackResults results) {
-            mResults = results;
+        public MockCallback(CallbackResult result) {
+            mResult = result;
         }
 
         @Override
         public void onMessageReceived(MessageEvent messageEvent) {
-            mResults.mCount += 1;
-            mResults.mPath = messageEvent.getPath();
-            mResults.mData = messageEvent.getData();
+            mResult.mCount += 1;
+            mResult.mEvent = new MockEvent(messageEvent);
         }
     }
 
@@ -44,6 +42,13 @@ public class MessageListenerTest extends TestCase {
             mNodeId = node;
             mPath = path;
             mData = data;
+        }
+
+        public MockEvent(MessageEvent event) {
+            mRequestId = event.getRequestId();
+            mNodeId = event.getSourceNodeId();
+            mPath = event.getPath();
+            mData = event.getData();
         }
 
         @Override
@@ -77,26 +82,26 @@ public class MessageListenerTest extends TestCase {
 
     public void testAddCallback() {
         MessageListener listener = new MessageListener();
-        listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResults()));
+        listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResult()));
         assertNotNull(listener.getCallback(MESSAGE_PATH));
     }
 
     public void testRemoveCallback() {
         MessageListener listener = new MessageListener();
-        listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResults()));
+        listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResult()));
         listener.removeCallback(MESSAGE_PATH);
         assertNull(listener.getCallback(MESSAGE_PATH));
     }
 
     public void testReceiveMessage() {
         MessageListener listener = new MessageListener();
-        CallbackResults results = new CallbackResults();
-        listener.addCallback(MESSAGE_PATH, new MockCallback(results));
+        CallbackResult result = new CallbackResult();
+        listener.addCallback(MESSAGE_PATH, new MockCallback(result));
 
         MockEvent event = new MockEvent(1, "NODE", MESSAGE_PATH, null);
         listener.onMessageReceived(event);
-        assertEquals(1, results.mCount);
-        assertEquals(MESSAGE_PATH, results.mPath);
-        assertNull(null, results.mData);
+        assertEquals(1, result.mCount);
+        assertEquals(MESSAGE_PATH, result.mEvent.getPath());
+        assertNull(null, result.mEvent.getData());
     }
 }
