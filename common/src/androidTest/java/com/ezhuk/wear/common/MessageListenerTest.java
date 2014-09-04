@@ -82,13 +82,19 @@ public class MessageListenerTest extends TestCase {
 
     public void testAddCallback() {
         MessageListener listener = new MessageListener();
+        assertNull(listener.getCallback(MESSAGE_PATH));
+
         listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResult()));
         assertNotNull(listener.getCallback(MESSAGE_PATH));
     }
 
     public void testRemoveCallback() {
         MessageListener listener = new MessageListener();
+        assertNull(listener.getCallback(MESSAGE_PATH));
+
         listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResult()));
+        assertNotNull(listener.getCallback(MESSAGE_PATH));
+
         listener.removeCallback(MESSAGE_PATH);
         assertNull(listener.getCallback(MESSAGE_PATH));
     }
@@ -98,10 +104,18 @@ public class MessageListenerTest extends TestCase {
         CallbackResult result = new CallbackResult();
         listener.addCallback(MESSAGE_PATH, new MockCallback(result));
 
-        MockEvent event = new MockEvent(1, "NODE", MESSAGE_PATH, null);
-        listener.onMessageReceived(event);
-        assertEquals(1, result.mCount);
-        assertEquals(MESSAGE_PATH, result.mEvent.getPath());
-        assertNull(null, result.mEvent.getData());
+        MockEvent[] events = {
+                new MockEvent(1, "NODE1", "/msg1", null),
+                new MockEvent(2, "NODE2", "/msg2", null)
+        };
+
+        for (int i = 0; events.length > i; ++i) {
+            listener.onMessageReceived(events[i]);
+            assertEquals(i + 1, result.mCount);
+            assertEquals(events[i].getRequestId(), result.mEvent.getRequestId());
+            assertEquals(events[i].getSourceNodeId(), result.mEvent.getSourceNodeId());
+            assertEquals(events[i].getPath(), result.mEvent.getPath());
+            assertEquals(events[i].getData(), result.mEvent.getData());
+        }
     }
 }
