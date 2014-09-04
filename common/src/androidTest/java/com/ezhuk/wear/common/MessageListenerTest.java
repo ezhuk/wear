@@ -102,12 +102,15 @@ public class MessageListenerTest extends TestCase {
     public void testReceiveMessage() {
         MessageListener listener = new MessageListener();
         CallbackResult result = new CallbackResult();
-        listener.addCallback(MESSAGE_PATH, new MockCallback(result));
 
         MockEvent[] events = {
                 new MockEvent(1, "NODE1", "/msg1", null),
                 new MockEvent(2, "NODE2", "/msg2", null)
         };
+
+        for (MockEvent event : events) {
+            listener.addCallback(event.getPath(), new MockCallback(result));
+        }
 
         for (int i = 0; events.length > i; ++i) {
             listener.onMessageReceived(events[i]);
