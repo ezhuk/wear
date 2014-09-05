@@ -8,6 +8,8 @@ import com.google.android.gms.wearable.MessageEvent;
 
 import junit.framework.TestCase;
 
+import org.mockito.Mockito;
+
 
 public class MessageListenerTest extends TestCase {
     private static final String MESSAGE_PATH = "/foo";
@@ -101,24 +103,15 @@ public class MessageListenerTest extends TestCase {
 
     public void testReceiveMessage() {
         MessageListener listener = new MessageListener();
-        CallbackResult result = new CallbackResult();
 
-        MockEvent[] events = {
-                new MockEvent(1, "NODE1", "/msg1", null),
-                new MockEvent(2, "NODE2", "/msg2", null)
-        };
+        MessageListener.Callback callback = Mockito.mock(MessageListener.Callback.class);
+        listener.addCallback(MESSAGE_PATH, callback);
 
-        for (MockEvent event : events) {
-            listener.addCallback(event.getPath(), new MockCallback(result));
-        }
+        MessageEvent event = Mockito.mock(MessageEvent.class);
+        Mockito.when(event.getPath()).thenReturn(MESSAGE_PATH);
+        listener.onMessageReceived(event);
 
-        for (int i = 0; events.length > i; ++i) {
-            listener.onMessageReceived(events[i]);
-            assertEquals(i + 1, result.mCount);
-            assertEquals(events[i].getRequestId(), result.mEvent.getRequestId());
-            assertEquals(events[i].getSourceNodeId(), result.mEvent.getSourceNodeId());
-            assertEquals(events[i].getPath(), result.mEvent.getPath());
-            assertEquals(events[i].getData(), result.mEvent.getData());
-        }
+        Mockito.verify(callback).onMessageReceived(event);
+        Mockito.verifyNoMoreInteractions(callback);
     }
 }
