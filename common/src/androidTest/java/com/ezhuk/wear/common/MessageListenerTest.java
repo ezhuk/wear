@@ -14,66 +14,6 @@ import org.mockito.Mockito;
 public class MessageListenerTest extends TestCase {
     private static final String MESSAGE_PATH = "/foo";
 
-    private static class CallbackResult {
-        public int mCount;
-        public MockEvent mEvent;
-    }
-
-    private static class MockCallback implements MessageListener.Callback {
-        private CallbackResult mResult;
-
-        public MockCallback(CallbackResult result) {
-            mResult = result;
-        }
-
-        @Override
-        public void onMessageReceived(MessageEvent messageEvent) {
-            mResult.mCount += 1;
-            mResult.mEvent = new MockEvent(messageEvent);
-        }
-    }
-
-    private static class MockEvent implements MessageEvent {
-        private int mRequestId;
-        private String mNodeId;
-        private String mPath;
-        private byte[] mData;
-
-        public MockEvent(int id, String node, String path, byte[] data) {
-            mRequestId = id;
-            mNodeId = node;
-            mPath = path;
-            mData = data;
-        }
-
-        public MockEvent(MessageEvent event) {
-            mRequestId = event.getRequestId();
-            mNodeId = event.getSourceNodeId();
-            mPath = event.getPath();
-            mData = event.getData();
-        }
-
-        @Override
-        public int getRequestId() {
-            return mRequestId;
-        }
-
-        @Override
-        public String getSourceNodeId() {
-            return mNodeId;
-        }
-
-        @Override
-        public String getPath() {
-            return mPath;
-        }
-
-        @Override
-        public byte[] getData() {
-            return mData;
-        }
-    }
-
     protected void setUp() {
         // empty
     }
@@ -86,7 +26,7 @@ public class MessageListenerTest extends TestCase {
         MessageListener listener = new MessageListener();
         assertNull(listener.getCallback(MESSAGE_PATH));
 
-        listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResult()));
+        listener.addCallback(MESSAGE_PATH, Mockito.mock(MessageListener.Callback.class));
         assertNotNull(listener.getCallback(MESSAGE_PATH));
     }
 
@@ -94,7 +34,7 @@ public class MessageListenerTest extends TestCase {
         MessageListener listener = new MessageListener();
         assertNull(listener.getCallback(MESSAGE_PATH));
 
-        listener.addCallback(MESSAGE_PATH, new MockCallback(new CallbackResult()));
+        listener.addCallback(MESSAGE_PATH, Mockito.mock(MessageListener.Callback.class));
         assertNotNull(listener.getCallback(MESSAGE_PATH));
 
         listener.removeCallback(MESSAGE_PATH);
