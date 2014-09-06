@@ -10,6 +10,8 @@ import junit.framework.TestCase;
 
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+
 
 public class MessageListenerTest extends TestCase {
     private static final String MESSAGE_PATH = "/foo";
@@ -52,6 +54,29 @@ public class MessageListenerTest extends TestCase {
         listener.onMessageReceived(event);
 
         Mockito.verify(callback).onMessageReceived(event);
+        Mockito.verifyNoMoreInteractions(callback);
+    }
+
+    public void testReceiveMultipleMessages() {
+        MessageListener listener = new MessageListener();
+
+        MessageListener.Callback callback = Mockito.mock(MessageListener.Callback.class);
+        listener.addCallback(MESSAGE_PATH, callback);
+
+        ArrayList<MessageEvent> events = new ArrayList<MessageEvent>();
+        for (int i = 0; 2 > i; ++i) {
+            MessageEvent event = Mockito.mock(MessageEvent.class);
+            Mockito.when(event.getPath()).thenReturn(MESSAGE_PATH);
+            events.add(event);
+        }
+
+        for (MessageEvent event : events) {
+            listener.onMessageReceived(event);
+        }
+
+        for (MessageEvent event : events) {
+            Mockito.verify(callback).onMessageReceived(event);
+        }
         Mockito.verifyNoMoreInteractions(callback);
     }
 }
